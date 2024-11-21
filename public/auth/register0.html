@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="auth_style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Реєстрація</h1>
+    <form id="registerForm">
+        
+        <label for="email">Електронна пошта:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="fullName">Повне ім'я:</label>
+        <input type="text" id="fullName" name="fullName" required>
+        
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <button type="submit">Зареєструватися</button>
+    </form>
+    </div>
+    
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+            
+            const email = document.getElementById('email').value;
+            const fullName = document.getElementById('fullName').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email,
+                        fullName,
+                        password,
+                    }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Реєстрація успішнаk!');
+                    window.location.href = 'http://localhost:4445';
+                } else {
+                    alert(data.message || 'Щось пішло не так');
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+            }
+        });
+    </script>
+</body>
+</html>

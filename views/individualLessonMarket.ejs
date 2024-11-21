@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Lessons</title>
+  <link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/market.css">
+  <script src="/showLog.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container1">
+            <h1 id="title">Курс з Математики</h1>
+        </div>  
+            <div class="menu_button" id="authBlock">
+                <p class="text"><a href="#">Авторизація</a></p>
+                <div class="dropdown-content">
+                    <button onclick="window.location.href='auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='auth/register.html'">Зареєструватися</button>
+                </div>
+            </div>
+        
+            <div class="menu_button"><a href="/" >Головна</a></div>
+            <div class="menu_button"><a href="/lessons" >Курс</a></div>
+            <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+    </header>
+    <main>
+        <div class="container">
+            <section class="section" id="indi_lesson">
+                <div class="lesson-package">
+                    <h3>1 урок</h3>
+                    <span>Ціна за урок: 300 грн</span>
+                    <span>Загальна сума: 300 грн</span>
+                    <button class="button-29" role="button">ПРИДБАТИ</button>
+                </div>
+                <div class="lesson-package">
+                    <h3>4 уроки</h3>
+                    <span class="discount" style="font-size: 14px;">-10%</span>
+                    <span style="text-decoration: line-through; text-decoration-color: red;">300 грн</span><br>
+                    <span>270 грн</span>
+                    <span>Загальна сума: 1080 грн</span>
+                    <button class="button-29" role="button">ПРИДБАТИ</button>
+                </div>
+                <div class="lesson-package">
+                    <h3>8 уроків</h3>
+                    <span class="discount" style="font-size: 14px;">-16.7%</span>
+                    <span style="text-decoration: line-through; text-decoration-color: red;">300 грн</span><br>
+                    <span>250 грн</span>
+                    <span>Загальна сума: 2000 грн</span>
+                    <button class="button-29" role="button">ПРИДБАТИ</button>
+                </div>
+                <div class="lesson-package">
+                    <h3>16 уроків</h3>
+                    <span class="discount" style="font-size: 14px;">-23%</span>
+                    <span style="text-decoration: line-through; text-decoration-color: red;">300 грн</span><br>
+                    <span>230 грн</span>
+                    <span>Загальна сума: 3680 грн</span>
+                    <button class="button-29" role="button">ПРИДБАТИ</button>
+                </div>
+                <div class="lesson-package">
+                    <h3>32 уроки</h3>
+                    <span class="discount" style="font-size: 14px;">-33%</span>
+                    <span style="text-decoration: line-through; text-decoration-color: red;">300 грн</span><br>
+                    <span>200 грн</span>
+                    <span>Загальна сума: 6400 грн</span>
+                    <button class="button-29" role="button">ПРИДБАТИ</button>
+                </div>
+                <div class="lesson-package">
+                    <h3>64 уроки</h3>
+                    <span class="discount" style="font-size: 14px;">-40%</span>
+                    <span style="text-decoration: line-through; text-decoration-color: red;">300 грн</span><br>
+                    <span>180 грн</span>
+                    <span>Загальна сума: 11520 грн</span>
+                    <button class="button-29" role="button">ПРИДБАТИ</button>
+                </div>
+            </section>
+            <section class="section" id="tutors">
+                <h1>Обери репетитора самостійно</h1>
+            </section>
+        </div>
+    </main>
+    
+    <script>
+        
+// Додаємо функцію для отримання викладачів
+async function fetchTutors() {
+    try {
+        const response = await fetch('/tutors'); // Припустимо, це ваш ендпоінт для викладачів
+        const tutors = await response.json();
+
+        displayTutors(tutors);
+    } catch (error) {
+        console.error('Error fetching tutors:', error);
+    }
+}
+
+// Функція для відображення викладачів на сторінці
+// Функція для відображення викладачів на сторінці
+function displayTutors(tutors) {
+    const tutorsSection = document.getElementById('tutors');
+    
+    tutors.forEach(tutor => {
+        const tutorDiv = document.createElement('div');
+        tutorDiv.className = 'tutor';
+
+        tutorDiv.innerHTML = `
+            <div class="tutor_section">
+            <h3>${tutor.fullName}</h3>
+            <p>Досвід: ${tutor.experienceYears} років</p>
+            <p>Короткий опис: ${tutor.shortDescription}</p>
+            <p>Відеопредставлення:</p> 
+            <div id="lecture-content" class="content-section">
+            <iframe width="560" height="315" 
+          src="${tutor.videoDescriptionURL}" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+  </iframe>
+            <p><button class="button-29" id="${tutor._id}" onclick="openTutorPage('${tutor._id}')" role="button">ДЕТАЛЬНІШЕ</button></p>
+            </div></div>
+        `;
+
+        tutorsSection.appendChild(tutorDiv);
+    });
+}
+
+// Функція для перенаправлення на сторінку викладача
+function openTutorPage(tutorId) {
+    window.location.href = `/tutors/${tutorId}`;
+}
+
+
+// Викликаємо функцію при завантаженні сторінки
+fetchTutors();
+
+    </script>
+</body>
+</html>

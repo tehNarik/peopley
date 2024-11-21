@@ -1,0 +1,513 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.buttons {
+    display: inline-block;
+  margin-top: 50px;
+  text-align: center;
+  border-radius: 30px;
+}
+
+.blob-btn {
+  z-index: 1;
+  position: relative;
+  padding: 20px 46px;
+  margin-bottom: 30px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #0505A9;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  transition: color 0.5s;
+  cursor: pointer;
+  border-radius: 30px;
+}
+.blob-btn:before {
+  content: "";
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #0505A9;
+  border-radius: 30px;
+}
+.blob-btn:after {
+  content: "";
+  z-index: -2;
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s 0.2s;
+  border-radius: 30px;
+}
+.blob-btn:hover {
+  color: #FFFFFF;
+  border-radius: 30px;
+}
+.blob-btn:hover:after {
+  transition: all 0.3s;
+  left: 0;
+  top: 0;
+  border-radius: 30px;
+}
+.blob-btn__inner {
+  z-index: -1;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  background: #ffffff;
+}
+.blob-btn__blobs {
+  position: relative;
+  display: block;
+  height: 100%;
+  filter: url("#goo");
+}
+.blob-btn__blob {
+  position: absolute;
+  top: 2px;
+  width: 25%;
+  height: 100%;
+  background: #0505A9;
+  border-radius: 100%;
+  transform: translate3d(0, 150%, 0) scale(1.7);
+  transition: transform 0.45s;
+}
+@supports (filter: url("#goo")) {
+  .blob-btn__blob {
+    transform: translate3d(0, 150%, 0) scale(1.4);
+  }
+}
+.blob-btn__blob:nth-child(1) {
+  left: 0%;
+  transition-delay: 0s;
+}
+.blob-btn__blob:nth-child(2) {
+  left: 30%;
+  transition-delay: 0.08s;
+}
+.blob-btn__blob:nth-child(3) {
+  left: 60%;
+  transition-delay: 0.16s;
+}
+.blob-btn__blob:nth-child(4) {
+  left: 90%;
+  transition-delay: 0.24s;
+}
+.blob-btn:hover .blob-btn__blob {
+  transform: translateZ(0) scale(1.7);
+}
+@supports (filter: url("#goo")) {
+  .blob-btn:hover .blob-btn__blob {
+    transform: translateZ(0) scale(1.4);
+  }
+}
+
+
+.wave-button:hover::after {
+    transform: translateY(0);
+}
+body {
+    position: relative;
+    z-index: -3;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+main{
+  position: relative;
+  z-index: -2;
+}
+header {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: #002601;
+    color: white;
+    padding: 1rem 0;
+    align-items: center;
+}
+
+.container1, .container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.container1 {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+h1 {
+    margin: 0;
+}
+
+#title {
+    display: inline-block;
+    text-align: left;
+    align-items: center;
+    margin-left: 10%;
+}
+
+.section {
+    position: absolute;
+    background-color: rgba(0, 174, 0, 0.584);
+    padding: 2rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+.section h2 {
+    margin-top: 0;
+}
+.section h1, h3{
+    text-align: center;
+}
+
+
+.footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.dropdown {
+    position: absolute;
+    display: inline-block;
+    margin: 0;
+}
+
+.text {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 3;
+}
+
+.dropdown-content button {
+    display: block;
+    padding: 8px 16px;
+    margin: 5px 0;
+    background-color: lightgrey;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content button:hover {
+    background-color: grey;
+    color: white;
+}
+
+#authBlock:hover .dropdown-content {
+    display: block;
+}
+
+
+.header-buttons {
+    display: flex;
+    gap: 10px; /* Зменшено відстань між кнопками */
+}
+
+.menu_button {
+    width: 140px;
+    height: 50px;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    border-radius: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 0;
+    margin-right: 30px;
+}
+.menu_button:last-child{
+    margin-right: 11%;
+}
+
+
+.menu_button:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-radius: 30px;
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 400%;
+    filter: blur(5px);
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    z-index: -1;
+    animation: glowing 20s linear infinite;
+}
+
+.menu_button:hover:before {
+    opacity: 1;
+}
+
+.menu_button:active {
+    color: #000;
+}
+
+.menu_button:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    top: 0;
+    right: 0;
+    border-radius: 30px;
+    z-index: -1;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+.menu_button a, p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    
+}
+a{
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 10;
+}
+.button-container {
+    display: inline-block;
+}
+
+.wave-button {
+    position: relative;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: #3498db;
+    border-radius: 50px;
+    overflow: hidden;
+    transition: color 0.4s ease;
+}
+
+.wave-button:hover {
+    color: #3498db;
+}
+
+.wave-button::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    transform: translateY(100%);
+    transition: transform 0.5s ease;
+    border-radius: 50px;
+}
+
+.wave-button:hover::before {
+    transform: translateY(0);
+}
+
+.wave-button:hover::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
+    transform: translateY(100%);
+    transition: transform 0.7s ease;
+    border-radius: 50px;
+}
+
+.wave-button:hover::after {
+    transform: translateY(0);
+}
+#personal_lesson{
+    width: 60%;
+}
+svg {
+    position: absolute; /* Виводимо SVG за межі потоку */
+    width: 0;
+    height: 0;
+}
+
+#lesson_details{
+    position: absolute; /* Додаємо відносне позиціонування до секції */
+    width: 80%;
+}
+#lessons_course ul{
+    display: inline-block;
+    padding-left: 7%;
+    
+}
+.section {
+    position: absolute;
+    z-index: 2;
+    background-color: rgba(0, 174, 0, 0.584);
+    padding: 2rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative; /* Додаємо відносне позиціонування до секції */
+}
+
+.buttons {
+    position: absolute; /* Абсолютне позиціонування для кнопки */
+    top: 10px; /* Відстань від верху секції */
+    right: 10px; /* Відстань від правого краю секції */
+    text-align: center;
+}
+.lesson-menu {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+/* Загальний стиль для обох кнопок */
+.lesson-menu button {
+  width: 150px;
+  height: 40px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%); /* Трапеція */
+
+}
+#lecture-btn, #description-btn, #schedule-btn, #feedback-btn {
+  margin-right: -11.5px; 
+}
+#practice-btn {
+  margin-left: -11.5px; 
+}
+.lesson-menu .active {
+  background-color: #4CAF50; /* Зелений для активної */
+  z-index: 3; /* Активна кнопка зверху */
+}
+.lesson-menu .inactive {
+  background-color: #888; /* Сірий для неактивної */
+  z-index: 1;
+}
+
+/* Змінюємо колір кнопок при наведенні */
+.lesson-menu button:hover {
+  opacity: 0.9;
+}
+
+.content-section {
+    text-align: center;
+    padding: 20px;
+}
+  #timer {
+    color: red;
+}
+.container span, #timer{
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.container p{
+  padding: 10px;
+  font-size: 20px;
+}
+#profile_container .section{
+  display: flex;
+  width: 47%;
+}
+#profile_container{
+  display: flex;
+}
+#profile_container .section:first-child{
+  margin-right: 6%;
+}
+
+#indi_less {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Вирівнює по горизонталі (по центру) */
+}
+
+.button-container {
+  width: 100%; /* Займає всю ширину секції */
+  display: flex;
+  justify-content: center; /* Вирівнює кнопку по центру */
+}
+
+#buy-lessons, #my-lessons {
+  width: 50%;
+  height: 100%;
+  padding: 10px 20px;
+  font-size: 32px;
+  background-color: #005703;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+#buy-lessons:hover {
+  background-color: #45a049;
+}
+#my-lessons:hover {
+  background-color: #0073ff;
+}
+#my-lessons {
+  width: 20%;
+  background-color: #0028ad;
+}

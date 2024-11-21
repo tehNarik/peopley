@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <form action="" id="registerForm">
+            <h1>Реєстрація</h1>
+            <div class="input-box">
+                <input type="text" placeholder="Email" id="email" name="email" reauired>
+            </div>
+            <div class="input-box">
+                <input type="text" placeholder="Name" id="fullName" name="fullName" reauired>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Password" id="password" name="password"  reauired>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="#">Вже є акаунт?</a>
+            </div>
+            <button type="submit" class="btn">Зареєструватися</button>
+
+        </form>
+    </div>
+
+</body>
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        
+        const email = document.getElementById('email').value;
+        const fullName = document.getElementById('fullName').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    fullName,
+                    password,
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
+                document.cookie = `token=${data.token}; path=/; secure; samesite=strict; max-age=86400`; // збереження на 1 день
+                alert('Реєстрація успішна!');
+                window.location.href = '/';
+            } else {
+                alert(data.message || 'Щось пішло не так');
+            }
+        } catch (error) {
+            console.error('Помилка:', error);
+        }
+         // Функція для отримання кукі
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Приклад використання кукі для отримання токена при зверненні до серверу
+    const token = getCookie('token');
+    
+    if (token) {
+        fetch('/lessons', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+    });
+</script>
+</html>

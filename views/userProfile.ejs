@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профіль користувача</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <header>
+        <div class="container1">
+            <h1 id="title">Курс з Математики</h1>
+        </div>  
+        
+        <div class="menu_button"><a href="/">Головна</a></div>
+        <div class="menu_button"><a href="/lessons">Курс</a></div>
+        <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+    </header>
+    
+    <main>
+        <!-- Модальне вікно для зміни імені -->
+<div id="changeNameModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('changeNameModal')">&times;</span>
+        <h2>Змінити ім'я</h2>
+        <form id="changeNameForm" onsubmit="changeName(event)">
+            <label for="newName">Нове ім'я:</label>
+            <input type="text" id="newName" name="newName" required>
+            <button type="submit">Змінити ім'я</button>
+        </form>
+    </div>
+</div>
+
+<!-- Модальне вікно для зміни пароля -->
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('changePasswordModal')">&times;</span>
+        <h2>Змінити пароль</h2>
+        <form id="changePasswordForm" onsubmit="changePassword(event)">
+            <label for="currentPassword">Поточний пароль:</label>
+            <input type="password" id="currentPassword" name="currentPassword" required>
+
+            <label for="newPassword">Новий пароль:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+            <button type="submit">Змінити пароль</button>
+        </form>
+    </div>
+</div>
+        <div id="profile_container" class="container">
+            <div id="profile_section" class="section">
+                <h1>Профіль користувача</h1>
+                <div><strong>Ім'я:</strong> <%= fullName %></div>
+                <div><strong>Email:</strong> <%= email %></div>
+                <button id="logoutButton" onclick="logout()">Вихід</button>
+                <!-- Кнопки для відкриття форм -->
+                <button class="change" id="changeNameButton">Змінити ім'я</button>
+                <button class="change" id="changePasswordButton">Змінити пароль</button>
+
+
+
+            </div>           
+            <div id="progress" class="section">
+                <h1>Прогрес курсу</h1>
+                <div class="overall-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: <%= averagePercentage %>%;"></div>
+                    </div>
+                    <div>Середня оцінка: <%= averagePercentage %>%</div>
+                </div>
+                <div class="overall-progress">
+                    <div class="progress-bar">
+                        <div class="progress2" style="width: <%= completedPercentage %>%;"></div>
+                    </div>
+                    <div>Пройдено курсу: <%= completedPercentage %>%</div>
+                </div>
+                <button id="resetProgress" onclick="resetProgress()">Скинути прогрес</button>
+            </div>
+        </div>
+
+
+        
+        
+    </main>
+    <script>
+        function resetProgress() {
+    fetch('/resetProgress', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include' // Додайте, якщо вам потрібно надсилати кукі
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Обробка відповіді сервера
+        console.log('Progress reset:', data);
+        // Можна додати код для оновлення інтерфейсу
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+        
+
+        // Вихлик функції для отримання даних при завантаженні сторінки
+
+function logout() {
+    fetch('/auth/logout', {
+        method: 'POST',
+        credentials: 'include' // Це дозволяє включати куки в запит
+    })
+    .then(response => {
+        if (response.ok) {
+            localStorage.removeItem('token');
+            window.location.href = '/'; // Перенаправлення на сторінку логіну
+        } else {
+            console.error('Не вдалося вийти з профілю');
+        }
+    });
+}
+// Функція для зміни імені
+function changeName(event) {
+    event.preventDefault();
+    
+    const newName = document.getElementById('newName').value;
+
+    fetch('/profile/changeName', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newName }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Ім\'я оновлено:', data);
+        window.location.href = 'http://localhost:4445/profile';
+        // Оновити інтерфейс або показати повідомлення
+    })
+    .catch(error => console.error('Помилка:', error));
+}
+
+// Функція для зміни пароля
+function changePassword(event) {
+    event.preventDefault();
+    
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+
+    fetch('/profile/changePassword', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+    })
+    .then(response => {
+        if (response.status === 400) {
+            // Якщо статус 400, виводимо алерт із повідомленням
+            return response.json().then(data => {
+                alert(data.message); // Виведення повідомлення про неправильний пароль
+            });
+        } else if (response.ok) {
+            return response.json().then(data => {
+                console.log('Пароль оновлено:', data);
+                window.location.href = '/profile';
+            });
+        } else {
+            throw new Error('Сталася помилка');
+        }
+    })
+    .then(data => {
+        console.log('Пароль оновлено:', data);
+        //window.location.href = 'http://localhost:4445/profile';
+        // Оновити інтерфейс або показати повідомлення
+    })
+    .catch(error => console.error('Помилка:', error));
+}
+// Функція для показу модального вікна
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.body.classList.add('modal-open');
+}
+
+// Функція для закриття модального вікна
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    document.body.classList.remove('modal-open');
+}
+
+// Відкриття модального вікна при натисканні на кнопку
+document.getElementById('changeNameButton').addEventListener('click', function() {
+    showModal('changeNameModal');
+});
+
+document.getElementById('changePasswordButton').addEventListener('click', function() {
+    showModal('changePasswordModal');
+});
+
+    </script>
+    <style>
+        @keyframes progress-animation {
+  0% {
+      width: 0;
+  }
+  100% {
+      width: <%= averagePercentage %>%; 
+  }
+}
+@keyframes progress-animation2 {
+  0% {
+      width: 0;
+  }
+  100% {
+      width: <%= completedPercentage %>%; 
+  }
+}
+
+    </style>
+</body>
+</html>

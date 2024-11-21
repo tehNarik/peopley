@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Урок <%= lesson.numberLesson %> - <%= lesson.title %></title>
+  <link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/tests.css">
+  <script src="/showLog.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    .matching-container {
+        margin-top: 10px; /* Add some space above the matching pairs */
+    }
+
+    .matching-pair {
+        margin-bottom: 10px; /* Space between each matching pair */
+    }
+
+    .matching-pair span {
+        padding-right: 10px; /* Space between the question part and the select box */
+    }
+    .matching-table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.matching-table th, .matching-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.answer-matrix {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.answer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.answer-button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.matching-table, .answer-selection {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.matching-table th, .matching-table td,
+.answer-selection th, .answer-selection td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.answer-selection input[type="radio"] {
+    cursor: pointer;
+}
+input[type="text"] {
+    width: 100%; /* Заповнити весь доступний простір */
+    padding: 10px; /* Відступи всередині поля */
+    margin: 10px 0; /* Відступи зверху та знизу */
+    border: 2px solid #ddd; /* Світло-сіра рамка */
+    border-radius: 5px; /* Закруглені кути */
+    font-size: 16px; /* Розмір шрифту */
+    font-family: 'Arial', sans-serif; /* Зручний шрифт */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легка тінь */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Плавна зміна стилів */
+}
+
+input[type="text"]:focus {
+    border-color: #4CAF50; /* Зелений колір рамки при фокусі */
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2); /* Сильніша тінь при фокусі */
+    outline: none; /* Прибрати стандартну рамку браузера */
+}
+
+input[type="text"]::placeholder {
+    color: #aaa; /* Світло-сірий текст для підказки */
+    font-style: italic; /* Курсив для підказки */
+}
+.test-menu {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.test-menu-item {
+    margin: 0 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.test-menu-item.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.test-menu-item:hover {
+    background-color: #0056b3;
+    color: white;
+}
+.test-menu-item.answered {
+    background-color: #afafaf;
+    color: #000000;
+}
+/* Контейнер меню тестів */
+.test-menu {
+    display: flex;
+    flex-wrap: wrap; /* Дозволяє елементам переноситися на наступний рядок */
+    gap: 10px; /* Проміжок між елементами */
+    justify-content: center; /* Центрує елементи по горизонталі */
+}
+
+/* Кожен пункт меню */
+.test-menu-item {
+    flex: 1 0 calc(40px); /* Кожен елемент займає 10% ширини (мінус відступи) */
+    max-width: calc(40px);
+    text-align: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.test-menu-item.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.test-menu-item.answered {
+    background-color: #d3d3d3;
+    color: #555;
+}
+.test-menu-item.active.answered.correct, .test-menu-item.answered.correct {
+    /* Ваші стилі для елементів з усіма цими класами */
+    background-color: #03b82e; /* приклад стилю для правильних відповідей (зелений) */
+    color: #093f16;
+    /* Інші стилі */
+}
+
+.test-menu-item.answered.incorrect, .test-menu-item.active.answered.incorrect {
+    background-color: #ff3243; /* Світло-червоний */
+    color: #721c24;
+}
+.correct-answer {
+    background-color: #d4edda; /* Зелене підсвічування для правильних варіантів */
+}
+
+.correct-answer-text {
+    color: #155724;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container1">
+        <h1 id="title">Курс з Математики</h1>
+    </div>  
+        <div class="menu_button" id="authBlock">
+            <p class="text"><a href="#">Авторизація</a></p>
+            <div class="dropdown-content">
+              <button onclick="window.location.href='http://localhost:4445/auth/login.html'">Ввійти</button>
+              <button onclick="window.location.href='http://localhost:4445/auth/register.html'">Зареєструватися</button>
+            </div>
+        </div>
+    
+        <div class="menu_button"><a href="/" >Головна</a></div>
+        <div class="menu_button"><a href="/lessons" >Курс</a></div>
+        <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+</header>
+
+  <main>
+    <div class="container">
+      <section class="section" id="lesson_details">
+        <h2>Урок <%= lesson.numberLesson %>: <%= lesson.title %></h2>
+        <div class="lesson-menu">
+          <button id="lecture-btn" class="active">Лекція</button>
+          <button id="practice-btn" class="inactive">Практика</button>
+        </div>
+        
+
+
+        
+        <div id="lecture-content" class="content-section">
+            <iframe width="560" height="315" 
+          src="<%= lesson.videoURL %>" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+  </iframe>
+        
+        </div>
+        
+        <div id="practice-content" class="content-section" style="display: none;">
+          <h3>Тест:</h3>
+          <% if (lesson.test) { %>
+            <!-- Додано меню тестів -->
+            <div class="test-menu">
+                <% lesson.test.questions.forEach((question, index) => { %>
+                  <button class="test-menu-item" data-index="<%= index %>" data-question-id="question-<%= index %>">
+                    <%= index + 1 %>
+                </button>
+                
+                <% }) %>
+            </div>
+            
+        <% } %>
+          <div id="test-container">
+              <form id="test-form">
+                  <div id="question-container">
+                      <% if (lesson.test) { %>
+                          <% let counter = 0;
+                          lesson.test.questions.forEach((question, index) => { %>
+                              <div class="question" id="question-<%= index %>" style="display: <%= index === 0 ? 'block' : 'none' %>;">
+                                  <p> <%= index + 1 %>. <%= question.questionText %></p>
+                                  <% if (question.questionImageURL) { %>
+                                      <img src="<%= question.questionImageURL %>" alt="Question Image" />
+                                  <% } %>
+      
+                                  <% if (question.type === 'choice') { 
+                                    counter++;%>
+                                      <% question.options.forEach((option, optIndex) => { %>
+                                          <div class="option">
+                                              <input type="radio" name="question<%= index %>" value="<%= optIndex %>" id="q<%= index %>opt<%= optIndex %>">
+                                              <label for="q<%= index %>opt<%= optIndex %>">
+                                                  <%= option.optionText %>
+                                              </label>
+                                          </div>
+                                      <% }) %>
+                                  <% } else if (question.type === 'matching') { %>
+                                    <% 
+// Генеруємо масив літер від 'А' до потрібної довжини на основі question.matchingPairs
+const alphabet = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЬЮЯ'.split('');
+const answerLabels = alphabet.slice(0, question.matchingPairs.length); 
+%>
+
+<div class="matching-container">
+    <h4>Частини питання:</h4>
+    
+    <!-- Таблиця з питаннями та варіантами відповідей -->
+    <table class="matching-table">
+      <thead>
+          <tr>
+              <th>Запитання</th>
+              <th>Варіант відповіді</th>
+          </tr>
+      </thead>
+      <!-- <% 
+    // Створюємо новий масив для answerParts і перемішуємо його
+    const shuffledAnswerParts = question.matchingPairs
+        .map(pair => pair.answerPart)
+        .sort(() => Math.random() - 0.5);
+%> -->
+
+<tbody>
+    <% question.matchingPairs.forEach((pair, i) => { %>
+        <tr>
+          <% if (pair.questionPart != "") { %>
+            <!-- Відображаємо частину питання (questionPart) без змін -->
+            <td><%= i + 1 %>. <%= pair.questionPart %></td>
+            <% }else{ %>
+              <td></td>
+              <% } %>
+            <!-- Відображаємо перемішаний варіант відповіді (answerPart) -->
+            <td><%= String.fromCharCode(1040 + i) %>. <%= matchingQuestions[index-counter].matchingPairs[i].answerPart  %></td>
+        </tr>
+    <% }) %>
+</tbody>
+  </table>
+  
+    
+    <!-- Матриця вибору відповідей -->
+<div class="answer-matrix">
+    <h4>Виберіть відповіді:</h4>
+    <table class="answer-selection">
+        <thead>
+            <tr>
+                <th></th>
+                <% answerLabels.forEach((label) => { %>
+                    <th><%= label %></th>
+                <% }) %>
+            </tr>
+        </thead>
+        <tbody>
+            <% question.matchingPairs.forEach((pair, i) => { 
+              if(pair.questionPart === "") return; %>
+                <tr>
+                    <td>Запитання <%= i + 1 %></td>
+                    <% answerLabels.forEach((label, answerIndex) => { %>
+                        <td>
+                            <input 
+                                type="radio" 
+                                name="question<%= index %> questionPart<%= i %>" 
+                                value="<%= matchingQuestions[index-counter].matchingPairs[answerIndex].answerPart  %>"> <!-- Змінено на pair.answerPart -->
+                        </td>
+                    <% }) %>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  <% }else if (question.type === 'fitting') { %>
+                                    <div class="fitting-answer">
+                                        <input type="text" name="question<%= index %>" id="fitting-question-<%= index %>" placeholder="Ваша відповідь" />
+                                    </div>
+                                <% } %>
+                              </div>
+                          <% }) %>
+                      <% } %>
+                  </div>
+      
+                  <div class="navigation-buttons">
+                      <button type="button" id="prev-question" disabled>Назад</button>
+                      <button type="button" id="next-question">Далі</button>
+                  </div>
+      
+                  <button type="submit" id="submit-test" style="display: none;">Здати тест</button>
+              </form>
+          </div>
+      </div>
+      
+      </section>
+    </div>
+  </main>
+
+  <footer>
+
+  </footer>    
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const questions = document.querySelectorAll(".question");
+    const testMenuItems = document.querySelectorAll(".test-menu-item");
+    const prevButton = document.getElementById("prev-question");
+    const nextButton = document.getElementById("next-question");
+    const submitButton = document.getElementById("submit-test");
+
+    let currentQuestionIndex = 0;
+
+    const showQuestion = (index) => {
+        questions.forEach((question, i) => {
+            question.style.display = i === index ? "block" : "none";
+        });
+        currentQuestionIndex = index;
+
+        // Активувати/деактивувати кнопки
+        prevButton.disabled = index === 0;
+        nextButton.style.display = index === questions.length - 1 ? "none" : "inline-block";
+        submitButton.style.display = index === questions.length - 1 ? "inline-block" : "none";
+
+        // Підсвітити активне питання в меню
+        testMenuItems.forEach((item, i) => {
+            item.classList.toggle("active", i === index);
+        });
+    };
+
+    // Перехід за допомогою меню
+    testMenuItems.forEach((item, index) => {
+        item.addEventListener("click", () => showQuestion(index));
+    });
+
+    // Навігація кнопками
+    prevButton.addEventListener("click", () => {
+        if (currentQuestionIndex > 0) {
+            showQuestion(currentQuestionIndex - 1);
+        }
+    });
+
+    nextButton.addEventListener("click", () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            showQuestion(currentQuestionIndex + 1);
+        }
+    });
+
+    // Почати з першого питання
+    showQuestion(0);
+});
+
+    function selectAnswer(questionIndex, answer) {
+        // Встановлюємо вибраний варіант відповіді у відповідний елемент таблиці
+        document.getElementById(`answer${questionIndex}`).innerText = answer;
+        
+        // За необхідності, ви можете зберегти вибраний варіант у прихованому полі для відправки форми
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+    const questions = document.querySelectorAll(".question");
+    const testMenuItems = document.querySelectorAll(".test-menu-item");
+    const prevButton = document.getElementById("prev-question");
+    const nextButton = document.getElementById("next-question");
+    const submitButton = document.getElementById("submit-test");
+
+    let currentQuestionIndex = 0;
+
+    const showQuestion = (index) => {
+        questions.forEach((question, i) => {
+            question.style.display = i === index ? "block" : "none";
+        });
+        currentQuestionIndex = index;
+
+        // Активувати/деактивувати кнопки
+        prevButton.disabled = index === 0;
+        nextButton.style.display = index === questions.length - 1 ? "none" : "inline-block";
+        submitButton.style.display = index === questions.length - 1 ? "inline-block" : "none";
+
+        // Підсвітити активне питання в меню
+        testMenuItems.forEach((item, i) => {
+            item.classList.toggle("active", i === index);
+        });
+
+        // Оновити стан меню (позначити сірим завершені питання)
+        updateAnsweredQuestions();
+    };
+
+    const updateAnsweredQuestions = () => {
+        questions.forEach((question, index) => {
+            const inputs = question.querySelectorAll("input");
+            const answered = Array.from(inputs).some(input => 
+                (input.type === "radio" && input.checked) || 
+                (input.type === "text" && input.value.trim() !== "")
+            );
+
+            if (answered) {
+                testMenuItems[index].classList.add("answered");
+            } else {
+                testMenuItems[index].classList.remove("answered");
+            }
+        });
+    };
+
+    // Перехід за допомогою меню
+    testMenuItems.forEach((item, index) => {
+        item.addEventListener("click", () => showQuestion(index));
+    });
+
+    // Навігація кнопками
+    prevButton.addEventListener("click", () => {
+        if (currentQuestionIndex > 0) {
+            showQuestion(currentQuestionIndex - 1);
+        }
+    });
+
+    nextButton.addEventListener("click", () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            showQuestion(currentQuestionIndex + 1);
+        }
+    });
+
+    // Слухачі для оновлення стану після взаємодії з відповідями
+    questions.forEach((question) => {
+        const inputs = question.querySelectorAll("input");
+        inputs.forEach(input => {
+            input.addEventListener("input", updateAnsweredQuestions);
+            input.addEventListener("change", updateAnsweredQuestions);
+        });
+    });
+
+    // Почати з першого питання
+    showQuestion(0);
+});
+document.querySelectorAll('input[type="radio"]').forEach(input => {
+    input.addEventListener('change', function () {
+        const questionIndex = this.name.replace('question', ''); // Визначити індекс питання
+        const selectedValue = this.value; // Вибрана відповідь
+
+        // Замість 'correctAnswer' має бути правильний варіант для цього питання
+        const correctAnswer = getCorrectAnswerForQuestion(questionIndex); // Функція для отримання правильної відповіді
+        const isCorrect = correctAnswer === selectedValue;
+
+        if (!isCorrect) {
+            // Підсвітити правильний варіант для цього питання
+            const correctPair = document.querySelector(`[data-matching-pair="${questionIndex}-${this.dataset.index}"]`);
+            if (correctPair) {
+                correctPair.classList.add('correct-answer');
+                correctPair.insertAdjacentHTML('beforeend', '<span class="correct-answer-text"> (Правильна відповідь)</span>');
+            }
+        }
+    });
+});
+
+function getCorrectAnswerForQuestion(questionIndex) {
+    // Функція для отримання правильного варіанту для питання (замініть на власний метод)
+    return 'correctAnswerValue'; // Замість 'correctAnswerValue' поверніть відповідне значення для цього питання
+}
+
+</script>
+  <script>
+    document.getElementById('lecture-btn').addEventListener('click', function() {
+  document.getElementById('lecture-content').style.display = 'block';
+  document.getElementById('practice-content').style.display = 'none';
+  // Змінюємо класи
+  this.classList.add('active');
+  this.classList.remove('inactive');
+  document.getElementById('practice-btn').classList.add('inactive');
+  document.getElementById('practice-btn').classList.remove('active');
+});
+document.getElementById('practice-btn').addEventListener('click', function() {
+      document.getElementById('lecture-content').style.display = 'none';
+      document.getElementById('practice-content').style.display = 'block';
+      this.classList.add('active');
+      this.classList.remove('inactive');
+      document.getElementById('lecture-btn').classList.add('inactive');
+      document.getElementById('lecture-btn').classList.remove('active');});
+
+    let currentQuestionIndex = 0;
+    const totalQuestions = <%= lesson.test ? lesson.test.questions.length : 0 %>;
+
+    const showQuestion = (index) => {
+      document.querySelectorAll('.question').forEach((question, i) => {
+        question.style.display = i === index ? 'block' : 'none';
+      });
+
+      // Контроль кнопок "Назад" і "Далі"
+      document.getElementById('prev-question').disabled = index === 0;
+      document.getElementById('next-question').style.display = index === totalQuestions - 1 ? 'none' : 'inline-block';
+      document.getElementById('submit-test').style.display = index === totalQuestions - 1 ? 'inline-block' : 'none';
+      MathJax.typeset();
+    };
+
+    document.getElementById('prev-question').addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion(currentQuestionIndex);
+      }
+    });
+
+    document.getElementById('next-question').addEventListener('click', () => {
+      if (currentQuestionIndex < totalQuestions - 1) {
+        currentQuestionIndex++;
+        showQuestion(currentQuestionIndex);
+      }
+    });
+
+    document.getElementById('test-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const answers = {};
+    formData.forEach((value, key) => {
+        answers[key] = value;
+    });
+
+    fetch('/test/pass', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            topic: '<%= lesson.title %>',
+            answers: answers
+        })
+    })
+    .then(response => response.json())
+.then(data => {
+    alert('Тест успішно здано! Отримано ' + data.result.score + ' балів!');
+
+    // Оновлюємо кольори для правильних/неправильних відповідей
+    const correctAnswers = data.correctAnswers;
+    console.log(correctAnswers);
+    console.log(answers);
+    for (const [key, value] of Object.entries(answers)) {
+        const element = document.querySelector(`[data-index="${key.replace('question', '')}"]`);
+        if (element) {
+            const questionIndex = parseInt(key.replace('question', ''), 10);
+            const correctAnswer = correctAnswers[questionIndex];
+
+            if (questionIndex !== undefined) {
+                // Для типу "matching" потрібно перевірити множинні відповіді
+                const isCorrect = Array.isArray(correctAnswer)
+    ? correctAnswer.includes(value)
+    : value === String(correctAnswer);
+
+if (isCorrect) {
+    element.classList.remove('incorrect');
+    element.classList.add('correct');
+} else {
+    element.classList.remove('correct');
+    element.classList.add('incorrect');
+    
+    // Додаємо правильну відповідь
+    const correctOption = document.querySelector(`#q${questionIndex}opt${correctAnswer}`);
+    if (correctOption) {
+        correctOption.classList.add('correct-answer');
+        correctOption.parentElement.insertAdjacentHTML('beforeend', '<span class="correct-answer-text"> (Правильна відповідь)</span>');
+    }
+}
+
+            }
+        }
+    }
+})
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Помилка. Зареєструйтеся на курсі, щоб зберігати результати, і в разі повторної помилки, зверніться, будь ласка, до мене в телеграм.');
+    });
+});
+
+
+
+
+
+    // Показати перше питання при завантаженні сторінки
+    showQuestion(currentQuestionIndex);
+  </script>
+  
+
+  
+</body>
+</html>

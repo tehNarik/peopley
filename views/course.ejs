@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Lessons</title>
+  <link rel="stylesheet" href="/index.css">
+
+</head>
+<body>
+    <header>
+        <div class="container1">
+            <h1 id="title">Курс з Математики</h1>
+        </div>  
+            <div class="menu_button" id="authBlock">
+                <p class="text"><a href="#">Авторизація</a></p>
+                <div class="dropdown-content">
+                    <button onclick="window.location.href='auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='auth/register.html'">Зареєструватися</button>
+                </div>
+            </div>
+        
+            <div class="menu_button"><a href="/" >Головна</a></div>
+            <div class="menu_button"><a href="/lessons" >Курс</a></div>
+            <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+    </header>
+  <main>
+    <div class="container">
+      <span>До основної сесії НМТ з математики лишилося: </span>
+      <div id="timer">
+        <span id="days"></span> днів
+        <span id="hours"></span> годин
+        <span id="minutes"></span> хвилин
+        <span id="seconds"></span> секунд
+      </div>
+    
+      <section class="section" id="lessons_course">
+        <% if (lessons.length > 0) { %>
+            <ul>
+                <% lessons.forEach(lesson => { %>
+                    <li>
+                        <% if (lesson.isAccessible) { %>
+                            <h2 style="color: white;">
+                                <a href="/lesson/<%= lesson.numberLesson %>">Урок <%= lesson.numberLesson %>: <%= lesson.title %></a>
+                            </h2>
+                        <% } else { %>
+                            <h2 style="color: gray;">
+                                Урок <%= lesson.numberLesson %>: <%= lesson.title %> <span>&#128274;</span>
+                            </h2>
+                        <% } %>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No lessons available at the moment.</p>
+        <% } %>
+    </section>
+    <section class="section" id="indi_less">
+      <div class="button-container">
+        <button id="buy-lessons">Хочу індивідуальні уроки</button>
+        <button id="my-lessons">Мої уроки</button>
+      </div>
+    </section>
+    
+</div>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Your Website</p>
+  </footer>
+  <script>
+    document.getElementById('buy-lessons').addEventListener('click', function() {
+            window.location.href = '/buy/lessons';  // Перенаправлення на сторінку /lessons
+        });
+        document.getElementById('my-lessons').addEventListener('click', function() {
+            window.location.href = '/myLessons';  // Перенаправлення на сторінку /lessons
+        });
+    const token = localStorage.getItem('token');
+
+if (token) {
+    // Якщо токен є, приховуємо блок авторизації та показуємо інформацію про користувача
+    document.getElementById('authBlock').style.display = 'none';
+    document.getElementById('profile').style.display = 'inline-block';
+
+} else {
+    // Якщо токена немає, показуємо блок авторизації та приховуємо інформацію про користувача
+    document.getElementById('authBlock').style.display = 'inline-block';
+    document.getElementById('profile').style.display = 'none';
+    document.getElementById('my-lessons').style.display = 'none';
+}
+        document.getElementById('buy-lessons').addEventListener('click', function() {
+            window.location.href = '/buy/lessons';  // Перенаправлення на сторінку /lessons
+        });
+        document.getElementById('my-lessons').addEventListener('click', function() {
+            window.location.href = '/myLessons';  
+        });
+    
+  function updateTimer() {
+    const endDate = new Date('2024-12-30T10:00:00'); // Встановіть дату закінчення таймера
+    const now = new Date();
+    const timeDiff = endDate - now;
+
+    if (timeDiff <= 0) {
+      // Таймер закінчився
+      document.getElementById('days').textContent = '0';
+      document.getElementById('hours').textContent = '0';
+      document.getElementById('minutes').textContent = '0';
+      document.getElementById('seconds').textContent = '0';
+      return;
+    }
+
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent = days;
+    document.getElementById('hours').textContent = hours;
+    document.getElementById('minutes').textContent = minutes;
+    document.getElementById('seconds').textContent = seconds;
+  }
+
+  setInterval(updateTimer, 1000); // Оновлювати таймер кожну секунду
+
+
+</script>
+
+</body>
+</html>

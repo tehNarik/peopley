@@ -1,0 +1,296 @@
+#indi_lesson {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+.lesson-package {
+    background-color: rgb(81, 255, 0);
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    width: 30%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.lesson-package h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.lesson-package p {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .lesson-package {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .lesson-package {
+        width: 100%;
+    }
+}
+
+.lesson-package {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+
+}
+.lesson-package span:last-child{
+    font-size: 18px;
+    margin-top: 10px;
+}
+.discount {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
+
+}
+.discount {
+    background-color: red; /* Червоний фон */
+    color: white; /* Білий текст */
+    padding: 5px; /* Додати відступи */
+    border-radius: 8px; /* Закруглення кутів */
+    display: inline-block; /* Для правильного позиціонування */
+    margin-left: 10px; /* Відступ зліва */
+}
+
+.lesson-package {
+    position: relative;
+    height: 220px;
+    background: linear-gradient(135deg, #1e3c72, #2a69ac); /* Градієнтний фон */
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    width: 30%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Трохи темніша тінь для контрасту */
+    border-radius: 10px;
+    color: white; /* Білий текст для кращого контрасту на фоні */
+}
+
+.lesson-package h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.lesson-package span {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+/* CSS */
+.button-29 {
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    border-radius: 6px;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono",monospace;
+    height: 48px;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    position: absolute;
+    bottom: 10px; /* Розміщуємо елемент внизу */
+
+    left:20%;
+
+    width: 60%;
+    background-color: coral;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+  }
+  
+  .button-29:focus {
+    box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  }
+  
+  .button-29:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+    transform: translateY(-2px);
+  }
+  
+  .button-29:active {
+    box-shadow: #3c4fe0 0 3px 7px inset;
+    transform: translateY(2px);
+  }
+  .tutor_section{
+    position: relative;
+    width: 70%;
+    left: 15%;
+    padding: 20px;
+    margin: 20px;
+    border: 3px solid black;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1e3c72, #2a69ac);
+    color: white;
+  }
+
+h2{
+    text-align: center;
+  }
+  #description-content h3{
+    margin: 20px;
+  }
+  .video-presentation{
+    text-align: center;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: #4CAF50; /* Зелений фон для заголовків */
+    color: white;
+}
+.booked {
+    background-color: #ff9090; /* Світло-червоний для зайнятих годин */
+    color: #333;
+}
+
+.available {
+    background-color: #e0ffe0; /* Світло-зелений для вільних годин */
+    color: #333;
+}
+/* Загальний стиль для модальних вікон */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Напівпрозорий чорний фон */
+    backdrop-filter: blur(5px); /* Розмиття фону */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Стиль для контенту модального вікна */
+  .modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    width: 400px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Тінь для ефекту глибини */
+    position: relative;
+    z-index: 1001;
+    text-align: center;
+    background: linear-gradient(135deg, #6e89ff, #b3a8ff); /* Градієнт фону */
+    color: #fff;
+    margin: auto;
+    margin-top: 10%;
+  }
+  
+  /* Стиль для кнопки закриття */
+  .close {
+    color: #fff;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #f1c40f;
+  }
+  
+  /* Стиль для форм */
+  .modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .modal-content label {
+    font-weight: bold;
+    text-align: left;
+    color: #f0f0f0;
+  }
+  
+  .modal-content input {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  .modal-content input:focus {
+    outline: none;
+    border: 2px solid #f0f0f0;
+  }
+  
+  
+  
+  .modal-content button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Стиль для активного модального вікна */
+  .show {
+    display: flex;
+  }
+  
+  /* Додатковий ефект при з'явленні */
+  @keyframes modal-appearance {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+  }
+  
+  .modal-content {
+    animation: modal-appearance 0.3s ease-out;
+  }
+  .modal-content button {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .available {
+    cursor: pointer;
+}

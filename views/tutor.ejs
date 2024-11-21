@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Lessons</title>
+  <link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/market.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+  <script src="/showLog.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container1">
+            <h1 id="title">Курс з Математики</h1>
+        </div>  
+            <div class="menu_button" id="authBlock">
+                <p class="text"><a href="#">Авторизація</a></p>
+                <div class="dropdown-content">
+                    <button onclick="window.location.href='http://localhost:4445/auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='http://localhost:4445/auth/register.html'">Зареєструватися</button>
+                </div>
+            </div>
+            <div class="menu_button"><a href="/" >Головна</a></div>
+            <div class="menu_button"><a href="/lessons" >Курс</a></div>
+            <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+    </header>
+    <main>
+        <div id="confirmLessonModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('confirmLessonModal')">&times;</span>
+                <h2>Назначити урок</h2>
+                <form id="confirmLessonForm" onsubmit="confirmLesson(event)">
+                    <label for="studentDescription">Опишіть свої побажання(клас, у якому навчаєтеся, тема, з якою потрібна допомога, тип завдань тощо) або залиште поле пустим і в цьому випадку пройдемо разом тест на визначення проблемних тем.</label>
+                    <input type="text" id="description" name="description">
+                    <button type="submit">Підтвердити</button>
+                </form>
+            </div>
+        </div>
+        <div class="container">
+            <p><h2>Викладач: <%= tutor.fullName %></h2></p>
+            <div class="lesson-menu">
+                <button id="lecture-btn" class="active">Відеопрезентація</button>
+                <button id="description-btn" class="inactive">Опис</button>
+                <button id="schedule-btn" class="inactive">Розклад</button>
+                <button id="feedback-btn" class="inactive">Відгуки</button>
+            </div>
+            <section id="video-content" class="content active">
+                <% if (tutor.videoDescriptionURL) { %>
+                <div class="video-presentation">
+                    <h2>Відео-презентація</h2>
+                    <iframe width="560" height="315" 
+                            src="<%= tutor.videoDescriptionURL %>" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <% } else { %>
+                    <p>Відео-презентація не доступна.</p>
+                <% } %>
+            </section>
+
+            <!-- Контент для опису -->
+            <section id="description-content" class="content" style="display:none;">
+                <h2>Опис</h2>
+                <h3>Короткий опис:</h3>
+                <p> <%= tutor.shortDescription || "Немає опису" %></p>
+                <h3>Детальний опис:</h3>
+                <p> <%= tutor.longDescription || "Немає детального опису" %></p>
+            </section>
+
+            <!-- Контент для розкладу -->
+            <section id="schedule-content" class="content" style="display:none;">
+                <h2>Розклад</h2>
+                <h3>Ви можете назначити урок на вільну годину за наявності уроків на балансі</h3>
+                <h3>Уроків на балансі: <%= lessonsBalance %></h3>
+                <table id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Час</th>
+                            <th>Понеділок</th>
+                            <th>Вівторок</th>
+                            <th>Середа</th>
+                            <th>Четвер</th>
+                            <th>П’ятниця</th>
+                            <th>Субота</th>
+                            <th>Неділя</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Генерація годин з 9:00 до 21:00 -->
+                        <script>
+                            for (let hour = 9; hour <= 21; hour++) {
+                                document.write('<tr>');
+                                const formattedHour = hour < 10 ? '0' + hour + ':00' : hour + ':00';
+                                document.write('<td>' + formattedHour + '</td>');
+                                // Додаємо порожні клітинки для днів тижня
+                                for (let day = 0; day < 7; day++) {
+                                    // Перевіряємо, чи заняття заплановане на цей день та годину
+                                    const isBooked = <%= JSON.stringify(schedule) %>[day] && <%= JSON.stringify(schedule) %>[day].includes(hour);
+                                    const cellClass = isBooked ? 'booked' : 'available';
+                                    document.write('<td class="' + cellClass + '" data-day="' + day + '" data-hour="' + hour + '">' + (isBooked ? 'Зайнято' : '') + '</td>');
+                                }
+                                document.write('</tr>');
+                            }
+                        </script>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Контент для відгуків -->
+            <section id="feedback-content" class="content" style="display:none;">
+                <h2>Відгуки</h2>
+                <p>Тут будуть відображені відгуки студентів.</p>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('lecture-btn').addEventListener('click', function() {
+          document.getElementById('video-content').style.display = 'block';
+          document.getElementById('description-content').style.display = 'none';
+          document.getElementById('schedule-content').style.display = 'none';
+          document.getElementById('feedback-content').style.display = 'none';
+
+          this.classList.add('active');
+          this.classList.remove('inactive');
+          document.getElementById('description-btn').classList.add('inactive');
+          document.getElementById('description-btn').classList.remove('active');
+          document.getElementById('schedule-btn').classList.add('inactive');
+          document.getElementById('schedule-btn').classList.remove('active');
+          document.getElementById('feedback-btn').classList.add('inactive');
+          document.getElementById('feedback-btn').classList.remove('active');
+        });
+
+        document.getElementById('description-btn').addEventListener('click', function() {
+          document.getElementById('video-content').style.display = 'none';
+          document.getElementById('description-content').style.display = 'block';
+          document.getElementById('schedule-content').style.display = 'none';
+          document.getElementById('feedback-content').style.display = 'none';
+
+          this.classList.add('active');
+          this.classList.remove('inactive');
+          document.getElementById('lecture-btn').classList.add('inactive');
+          document.getElementById('lecture-btn').classList.remove('active');
+          document.getElementById('schedule-btn').classList.add('inactive');
+          document.getElementById('schedule-btn').classList.remove('active');
+          document.getElementById('feedback-btn').classList.add('inactive');
+          document.getElementById('feedback-btn').classList.remove('active');
+        });
+
+        document.getElementById('schedule-btn').addEventListener('click', function() {
+          document.getElementById('video-content').style.display = 'none';
+          document.getElementById('description-content').style.display = 'none';
+          document.getElementById('schedule-content').style.display = 'block';
+          document.getElementById('feedback-content').style.display = 'none';
+
+          this.classList.add('active');
+          this.classList.remove('inactive');
+          document.getElementById('lecture-btn').classList.add('inactive');
+          document.getElementById('lecture-btn').classList.remove('active');
+          document.getElementById('description-btn').classList.add('inactive');
+          document.getElementById('description-btn').classList.remove('active');
+          document.getElementById('feedback-btn').classList.add('inactive');
+          document.getElementById('feedback-btn').classList.remove('active');
+        });
+
+        document.getElementById('feedback-btn').addEventListener('click', function() {
+          document.getElementById('video-content').style.display = 'none';
+          document.getElementById('description-content').style.display = 'none';
+          document.getElementById('schedule-content').style.display = 'none';
+          document.getElementById('feedback-content').style.display = 'block';
+
+          this.classList.add('active');
+          this.classList.remove('inactive');
+          document.getElementById('lecture-btn').classList.add('inactive');
+          document.getElementById('lecture-btn').classList.remove('active');
+          document.getElementById('description-btn').classList.add('inactive');
+          document.getElementById('description-btn').classList.remove('active');
+          document.getElementById('schedule-btn').classList.add('inactive');
+          document.getElementById('schedule-btn').classList.remove('active');
+        });
+    </script>
+    <script>
+        // Додаємо слухача подій на всі вільні клітинки
+        document.querySelectorAll('.available').forEach(cell => {
+    cell.addEventListener('click', function() {
+        const day = this.getAttribute('data-day');
+        const hour = this.getAttribute('data-hour');
+        const teacherId = "<%= teacherId %>";
+        const studentId = "<%= userId %>";
+
+        // Відкриваємо модальне вікно підтвердження
+        document.getElementById('confirmLessonModal').style.display = 'block';
+
+        // Зберігаємо дані уроку в глобальні змінні або атрибути для доступу під час підтвердження
+        document.getElementById('confirmLessonForm').dataset.day = day;
+        document.getElementById('confirmLessonForm').dataset.hour = hour;
+        document.getElementById('confirmLessonForm').dataset.teacherId = teacherId;
+        document.getElementById('confirmLessonForm').dataset.studentId = studentId;
+
+        // Додаємо обробник для підтвердження
+        document.getElementById('confirmLessonForm').onsubmit = function(event) {
+    event.preventDefault();
+    const description = document.getElementById('description').value; // Отримуємо опис
+    const lessonData = {
+        dayNumber: parseInt(this.dataset.day),
+        startHourNumber: parseInt(this.dataset.hour),
+        teacherId: this.dataset.teacherId,
+        studentId: this.dataset.studentId,
+        description: description // Додаємо опис
+    };
+    if (<%= lessonsBalance %> > 0) {
+    fetch('/lessons', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(lessonData),
+    })
+    .then(response => {
+        if (response.ok) {
+            // closeModal('confirmLessonModal');
+            // cell.classList.remove('available');
+            // cell.classList.add('booked');
+            // cell.innerText = 'Зайнято'; 
+            
+            // alert("Урок додано успішно!");
+            closeModal('confirmLessonModal');
+        
+        // Створюємо новий елемент td з класом 'booked' і текстом 'Зайнято'
+        const bookedCell = document.createElement('td');
+        bookedCell.classList.add('booked');
+        bookedCell.innerText = 'Зайнято';
+        alert("Урок додано успішно!");
+        // Заміна на новий заблокований елемент
+        cell.replaceWith(bookedCell);
+        } else {
+            alert('Помилка при додаванні уроку!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });}else{
+        alert("У вас недостатньо уроків для бронювання! Придбайте пакет зайнять, щоб назначити урок з викладачем.");
+    }
+};
+
+    });
+});
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    document.getElementById('description').value = ''; // Очистити поле вводу
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Lessons</title>
+  <link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/market.css">
+  <script src="/showLog.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container1">
+            <h1 id="title">Курс з Математики</h1>
+        </div>  
+            <div class="menu_button" id="authBlock">
+                <p class="text"><a href="#">Авторизація</a></p>
+                <div class="dropdown-content">
+                    <button onclick="window.location.href='auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='auth/register.html'">Зареєструватися</button>
+                </div>
+            </div>
+        
+            <div class="menu_button"><a href="/" >Головна</a></div>
+            <div class="menu_button"><a href="/lessons" >Курс</a></div>
+            <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+    </header>
+  <main>
+    <div class="container">
+      <div class="section">
+        <h2>Уроків на балансі: <%= lessonsBalance %></h2>
+        <h2>Розклад</h2>
+        <table id="schedule-table">
+            <thead>
+                <tr>
+                    <th>Час</th>
+                    <th>Понеділок</th>
+                    <th>Вівторок</th>
+                    <th>Середа</th>
+                    <th>Четвер</th>
+                    <th>П’ятниця</th>
+                    <th>Субота</th>
+                    <th>Неділя</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let hour = 9; hour <= 21; hour++) { %>
+                    <tr>
+                        <td><%= hour < 10 ? '0' + hour + ':00' : hour + ':00' %></td>
+                        <% for (let day = 0; day < 7; day++) { 
+                            // Перевіряємо, чи є урок на цей день і годину
+                            const lesson = lessons.find(l => l.dayNumber === day && l.startHourNumber === hour);
+                        %>
+                        <td class="<%= lesson ? 'booked' : 'available' %>">
+                            <% if (lesson) { %>
+                                <% if (lesson.teacher.zoomMeetingURL) { %>
+                                    <!-- Якщо є посилання Zoom, робимо його клікабельним -->
+                                    <a href="<%= lesson.teacher.zoomMeetingURL %>" target="_blank" style="color: black;">
+                                        Заняттяя з <%= lesson.teacher.fullName %>
+                                    </a>
+                                <% } else { %>
+                                    <!-- Якщо немає Zoom-посилання, просто показуємо текст -->
+                                    Заняття з <%= lesson.teacher.fullName %>
+                                <% } %>
+                            <% } %>
+                        </td>
+                        <% } %>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Your Website</p>
+  </footer>
+  
+
+</body>
+</html>
