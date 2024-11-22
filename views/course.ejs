@@ -15,8 +15,8 @@
             <div class="menu_button" id="authBlock">
                 <p class="text"><a href="#">Авторизація</a></p>
                 <div class="dropdown-content">
-                    <button onclick="window.location.href='auth/login.html'">Ввійти</button>
-                    <button onclick="window.location.href='auth/register.html'">Зареєструватися</button>
+                    <button onclick="window.location.href='/auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='/auth/register.html'">Зареєструватися</button>
                 </div>
             </div>
         
@@ -96,7 +96,7 @@ if (token) {
         });
     
   function updateTimer() {
-    const endDate = new Date('2024-12-30T10:00:00'); // Встановіть дату закінчення таймера
+    const endDate = new Date('2024-12-23T10:00:00'); // Встановіть дату закінчення таймера
     const now = new Date();
     const timeDiff = endDate - now;
 

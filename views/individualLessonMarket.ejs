@@ -16,8 +16,8 @@
             <div class="menu_button" id="authBlock">
                 <p class="text"><a href="#">Авторизація</a></p>
                 <div class="dropdown-content">
-                    <button onclick="window.location.href='auth/login.html'">Ввійти</button>
-                    <button onclick="window.location.href='auth/register.html'">Зареєструватися</button>
+                    <button onclick="window.location.href='/auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='/auth/register.html'">Зареєструватися</button>
                 </div>
             </div>
         
@@ -127,7 +127,11 @@ function displayTutors(tutors) {
 
 // Функція для перенаправлення на сторінку викладача
 function openTutorPage(tutorId) {
-    window.location.href = `/tutors/${tutorId}`;
+    if(localStorage.getItem('token')){
+        window.location.href = `/tutors/${tutorId}`;
+    }else{
+        window.location.href = `/auth/login.html`;
+    }
 }
 
 

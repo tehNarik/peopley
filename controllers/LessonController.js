@@ -2,6 +2,64 @@ import LessonModel from '../models/Lesson.js';
 import TestModel from '../models/Test.js';
 import TestResultModel from '../models/TestResult.js';
 import cookieParser from 'cookie-parser'
+import ffmpeg from 'fluent-ffmpeg';
+
+
+function convertEmbedURLToWatchURL(embedURL) {
+  const regex = /https:\/\/www\.youtube\.com\/embed\/([a-zA-Z0-9_-]+)/;
+  const match = embedURL.match(regex);
+
+  if (match) {
+      const videoId = match[1];
+      return `https://www.youtube.com/watch?v=${videoId}`;
+  } else {
+      throw new Error("Invalid YouTube embed URL");
+  }
+}
+const getVideoDuration = (videoURL) => {
+  videoURL = convertEmbedURLToWatchURL(videoURL);
+  return new Promise((resolve, reject) => {
+      ffmpeg.ffprobe(videoURL, (err, metadata) => {
+          if (err) reject(err);
+          else resolve(metadata.format.duration); // тривалість у секундах
+      });
+  });
+};
+
+export const getCourseStatistics = async (req, res) => {
+  try {
+      console.log('hel')
+      const lessonCount = await LessonModel.countDocuments();
+      const testCount = await TestModel.countDocuments();
+
+      // Для кожного уроку отримуємо тривалість відео
+      const lessons = await LessonModel.find({});
+      const videoDurations = await Promise.all(
+          lessons.map(async (lesson) => {
+              try {
+                  return await getVideoDuration(lesson.videoURL); // Використовуйте підходящий метод
+              } catch (error) {
+                  console.error(`Помилка з відео ${lesson.title}:`, error);
+                  return 0; // Якщо помилка, додаємо 0
+              }
+          })
+      );
+
+      const totalVideoDuration = videoDurations.reduce((sum, duration) => sum + duration, 0);
+
+      res.render('index', {
+          lessonCount,
+          totalVideoDuration: Math.ceil(totalVideoDuration / 60), // Хвилини
+          testCount
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Помилка при отриманні статистики курсу");
+  }
+};
+
+
+
 
 export const create = async (req, res)=>{
     try{

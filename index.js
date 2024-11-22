@@ -56,6 +56,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
     })
 })
 
+app.get('/', LessonController.getCourseStatistics);
 app.post('/auth/login', loginValidator,  handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidator, handleValidationErrors, UserController.register);
 app.get('/auth/me', checkAuth, UserController.getMe)
