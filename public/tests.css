@@ -138,4 +138,155 @@
     background-color: #f1f1f1;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
-  
+  .matching-container {
+    margin-top: 10px; /* Add some space above the matching pairs */
+}
+
+.matching-pair {
+    margin-bottom: 10px; /* Space between each matching pair */
+}
+
+.matching-pair span {
+    padding-right: 10px; /* Space between the question part and the select box */
+}
+.matching-table {
+width: 100%;
+margin-bottom: 20px;
+border-collapse: collapse;
+}
+
+.matching-table th, .matching-table td {
+padding: 10px;
+border: 1px solid #ddd;
+text-align: center;
+}
+
+.answer-matrix {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.answer-row {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.answer-button {
+padding: 5px 10px;
+cursor: pointer;
+}
+.matching-table, .answer-selection {
+width: 100%;
+margin-bottom: 20px;
+border-collapse: collapse;
+}
+
+.matching-table th, .matching-table td,
+.answer-selection th, .answer-selection td {
+padding: 10px;
+border: 1px solid #ddd;
+text-align: center;
+}
+
+.answer-selection input[type="radio"] {
+cursor: pointer;
+}
+input[type="text"] {
+width: 100%; /* Заповнити весь доступний простір */
+padding: 10px; /* Відступи всередині поля */
+margin: 10px 0; /* Відступи зверху та знизу */
+border: 2px solid #ddd; /* Світло-сіра рамка */
+border-radius: 5px; /* Закруглені кути */
+font-size: 16px; /* Розмір шрифту */
+font-family: 'Arial', sans-serif; /* Зручний шрифт */
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легка тінь */
+transition: border-color 0.3s, box-shadow 0.3s; /* Плавна зміна стилів */
+}
+
+input[type="text"]:focus {
+border-color: #4CAF50; /* Зелений колір рамки при фокусі */
+box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2); /* Сильніша тінь при фокусі */
+outline: none; /* Прибрати стандартну рамку браузера */
+}
+
+input[type="text"]::placeholder {
+color: #aaa; /* Світло-сірий текст для підказки */
+font-style: italic; /* Курсив для підказки */
+}
+.test-menu {
+display: flex;
+justify-content: center;
+margin-bottom: 20px;
+}
+
+.test-menu-item {
+margin: 0 10px;
+padding: 5px 10px;
+border: none;
+background-color: #f0f0f0;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+.test-menu-item.active {
+background-color: #007bff;
+color: white;
+}
+
+.test-menu-item:hover {
+background-color: #0056b3;
+color: white;
+}
+
+/* Контейнер меню тестів */
+.test-menu {
+display: flex;
+flex-wrap: wrap; /* Дозволяє елементам переноситися на наступний рядок */
+gap: 10px; /* Проміжок між елементами */
+justify-content: center; /* Центрує елементи по горизонталі */
+}
+
+/* Кожен пункт меню */
+.test-menu-item {
+flex: 1 0 calc(40px); /* Кожен елемент займає 10% ширини (мінус відступи) */
+max-width: calc(40px);
+text-align: center;
+background-color: #f0f0f0;
+border: 1px solid #ddd;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.test-menu-item.active {
+background-color: #007bff;
+color: white;
+}
+
+.test-menu-item.answered {
+background-color: #6d6d6d;
+color: #ffffff;
+}
+.test-menu-item.active.answered.correct, .test-menu-item.answered.correct {
+/* Ваші стилі для елементів з усіма цими класами */
+background-color: #03b82e; /* приклад стилю для правильних відповідей (зелений) */
+color: #093f16;
+/* Інші стилі */
+}
+
+.test-menu-item.answered.incorrect, .test-menu-item.active.answered.incorrect {
+background-color: #ff3243; /* Світло-червоний */
+color: #721c24;
+}
+.correct-answer {
+background-color: #d4edda; /* Зелене підсвічування для правильних варіантів */
+}
+
+.correct-answer-text {
+color: #155724;
+font-size: 0.9em;
+margin-left: 10px;
+}
+

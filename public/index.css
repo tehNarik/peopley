@@ -139,7 +139,7 @@ header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    background-color: #002601;
+    background-color: #007204;
     color: white;
     padding: 1rem 0;
     align-items: center;
@@ -241,7 +241,7 @@ h1 {
 }
 
 .menu_button {
-    width: 140px;
+    width: 15%;
     height: 50px;
     color: #fff;
     background: #111;
@@ -510,4 +510,11 @@ svg {
 #my-lessons {
   width: 20%;
   background-color: #0028ad;
+}
+#header-logo {
+  width: 40px; /* Встановіть необхідний розмір */
+  height: auto;
+  margin: 0 5%; /* Додаємо відступ між зображенням та текстом */
+  transform: scale(2); /* Збільшуємо зображення в 1.5 рази */
+  clip-path: inset(1px);
 }
