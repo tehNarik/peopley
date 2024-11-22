@@ -427,7 +427,9 @@ fetch('/test/pass', {
     
     const feedback = data.feedback; // Використовуємо `feedback`, що повертається з сервера
     console.log(feedback);
-    feedback.forEach((item, index) => {        
+    feedback.forEach((item, index) => {
+        const questionElement = item.userAnswer ? document.querySelector(`[data-index="${index}"]`) : null;
+        
         const inputs = document.querySelectorAll(`input[name="question${index}"]`);
         console.log(inputs);
     if(item.correctAnswer != item.userAnswer){
@@ -453,7 +455,17 @@ fetch('/test/pass', {
             label.style.backgroundColor = 'red';
             label.style.color = 'white';
         }
-    });}
+    });
+        if (questionElement != null) {
+            // Додаємо класи для правильних/неправильних відповідей
+            if (item.isCorrect) {
+                questionElement.classList.remove('incorrect');
+                questionElement.classList.add('correct');
+            } else {
+                questionElement.classList.remove('correct');
+                questionElement.classList.add('incorrect');
+            }
+        }}
     });
 })
 .catch(error => {
