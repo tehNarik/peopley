@@ -54,7 +54,7 @@
                 localStorage.setItem('token', data.token);
                 // Зберігаємо токен у кукі (без прапорця HttpOnly, оскільки це робиться на клієнтській стороні)
                 document.cookie = `token=${data.token}; path=/; secure; samesite=strict; max-age=86400`; // збереження на 1 день
-                alert('Увійшли успішно!' + document.cookie);
+                //alert('Увійшли успішно!' + document.cookie);
 
                 // Перенаправлення на іншу сторінку після входу
                 window.location.href = '/';

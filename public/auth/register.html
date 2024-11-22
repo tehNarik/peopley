@@ -56,7 +56,7 @@
             if (response.ok) {
                 localStorage.setItem('token', data.token);
                 document.cookie = `token=${data.token}; path=/; secure; samesite=strict; max-age=86400`; // збереження на 1 день
-                alert('Реєстрація успішна!');
+                //alert('Реєстрація успішна!');
                 window.location.href = '/';
             } else {
                 alert(data.message || 'Щось пішло не так');

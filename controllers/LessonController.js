@@ -28,28 +28,10 @@ const getVideoDuration = (videoURL) => {
 
 export const getCourseStatistics = async (req, res) => {
   try {
-      console.log('hel')
       const lessonCount = await LessonModel.countDocuments();
       const testCount = await TestModel.countDocuments();
-
-      // Для кожного уроку отримуємо тривалість відео
-      const lessons = await LessonModel.find({});
-      const videoDurations = await Promise.all(
-          lessons.map(async (lesson) => {
-              try {
-                  return await getVideoDuration(lesson.videoURL); // Використовуйте підходящий метод
-              } catch (error) {
-                  console.error(`Помилка з відео ${lesson.title}:`, error);
-                  return 0; // Якщо помилка, додаємо 0
-              }
-          })
-      );
-
-      const totalVideoDuration = videoDurations.reduce((sum, duration) => sum + duration, 0);
-
       res.render('index', {
           lessonCount,
-          totalVideoDuration: Math.ceil(totalVideoDuration / 60), // Хвилини
           testCount
       });
   } catch (error) {
@@ -141,8 +123,8 @@ export const getAll = async (req, res) => {
     }, {});
 
     const lessonsWithAccess = lessons.map((lesson, index) => {
-      const previousLessonAccessible = index === 0 || (lessons[index - 1] && passedLessons[lessons[index - 1].test.topic] && (index-1)!=0);
-      const isAccessible = previousLessonAccessible || lesson.numberLesson === 0;
+      const previousLessonAccessible =  (lessons[index - 1] && passedLessons[lessons[index - 1].test.topic]);
+      const isAccessible = previousLessonAccessible || lesson.numberLesson === 1;
       return {
         ...lesson.toObject(),
         isAccessible
