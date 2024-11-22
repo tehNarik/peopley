@@ -105,7 +105,6 @@ export const addQuestion = async (req, res) => {
 };
 
 export const pass = async (req, res) => {
-    console.log('start')
     try {
         const { topic, answers } = req.body;
 
@@ -177,12 +176,19 @@ test.questions.forEach((question, index) => {
         let result;
         if (userId) {
             //return res.status(400).json({ message: 'Користувач не аутентифікований' });
-        
-        result = await TestResultModel.findOneAndUpdate(
-            { topic, user: userId },
-            { score },
-            { new: true, upsert: true }
-        );} else {
+            const existingResult = await TestResultModel.findOne({ topic, user: userId });
+            let previousScore = null; 
+            if (existingResult) {
+                previousScore = existingResult.score;
+            }
+            if(!previousScore || previousScore<score){
+                result = await TestResultModel.findOneAndUpdate(
+                    { topic, user: userId },
+                    { score },
+                    { new: true, upsert: true }
+        )}else{ 
+        result = {score};}
+    } else {
             result = {score}
         }
         
