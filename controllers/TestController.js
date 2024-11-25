@@ -124,7 +124,8 @@ export const pass = async (req, res) => {
                 totalQuestions++;
                 const userAnswer = answers[`question${index}`]?.text; // Текст відповіді користувача
                 const correctOption = question.options.find(option => option.isCorrect);
-
+                //console.log('user answer is ' + userAnswer);
+                result.userAnswer = userAnswer;
                 if (correctOption) {
                     result.correctAnswer = correctOption.optionText;
                 }
@@ -136,6 +137,9 @@ export const pass = async (req, res) => {
                     result.userAnswer = userAnswer;
                 }
             } else if (question.type === 'matching') {
+
+
+                //console.log(JSON.stringify(answers));
                 const userAnswers = [];
                 const correctAnswers = [];
                 let matchingScore = 0;
@@ -146,8 +150,7 @@ export const pass = async (req, res) => {
                     const userSelectedAnswer = answers[`question${index} questionPart${i}`];
                     userAnswers.push(userSelectedAnswer);
                     correctAnswers.push(pair.answerPart);
-
-                    if (userSelectedAnswer && String(userSelectedAnswer) === String(pair.answerPart)) {
+                    if (userSelectedAnswer && String(userSelectedAnswer['index']) === String(pair.answerPart)) {
                         matchingScore++;
                     }
                 });
@@ -196,6 +199,7 @@ export const pass = async (req, res) => {
         } else {
             result = { score };
         }
+        //console.log(JSON.stringify(feedback))
         res.json({
             result,
             feedback, // Повертаємо об'єкт з деталями по кожному питанню

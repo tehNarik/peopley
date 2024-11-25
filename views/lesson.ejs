@@ -12,6 +12,7 @@
 </head>
 <body>
   <header>
+    <img src="/logo.png" alt="Logo" id="header-logo">
     <div class="container1">
         <h1 id="title">Курс з Математики</h1>
     </div>  
@@ -166,10 +167,12 @@ const answerLabels = alphabet.slice(0, question.matchingPairs.length);
                     <td>Запитання <%= i + 1 %></td>
                     <% answerLabels.forEach((label, answerIndex) => { %>
                         <td>
+                            <label>
                             <input 
                                 type="radio" 
                                 name="question<%= index %> questionPart<%= i %>" 
                                 value="<%= matchingQuestions[index-counter].matchingPairs[answerIndex].answerPart  %>"> <!-- Змінено на pair.answerPart -->
+                                </label>
                         </td>
                     <% }) %>
                 </tr>
@@ -424,49 +427,67 @@ fetch('/test/pass', {
 .then(response => response.json())
 .then(data => {
     alert('Тест успішно здано! Отримано ' + data.result.score + ' балів!');
-    
     const feedback = data.feedback; // Використовуємо `feedback`, що повертається з сервера
     console.log(feedback);
     feedback.forEach((item, index) => {
         const questionElement = item.userAnswer ? document.querySelector(`[data-index="${index}"]`) : null;
+        // const inputs = document.querySelectorAll(`input[name="question${index}"]`);
+        const inputs = document.querySelectorAll(`input`);
+        //console.log(inputs);
+        //console.log('item is ' + JSON.stringify(item))
         
-        const inputs = document.querySelectorAll(`input[name="question${index}"]`);
-        console.log(inputs);
-    if(item.correctAnswer != item.userAnswer){
+    if(item.correctAnswer !== item.userAnswer || Array.isArray(item.correctAnswer)){
+        
+        inputs.forEach((input, i) => {
+            input.disabled = true;
+        if(Array.isArray(item.correctAnswer)){
+            const indexes = input.name.match(/\d+/g);
+            const label = input.parentElement; // Отримуємо батьківський елемент
+        if (label.tagName === 'LABEL' && input.checked && indexes[0] == index) { // Перевіряємо, чи це <label>
+            if(item.correctAnswer[indexes[1]] !== input.value){
+                label.style.backgroundColor = 'red';
+            }else{
+                label.style.backgroundColor = 'green';
+            }
+        }
 
-    inputs.forEach((input) => {
-        input.disabled = true;
-        console.log('starting')
-        // Отримуємо текст відповіді з data-text атрибута
+        }
         const optionText = input.getAttribute('data-text');
+        const label = document.querySelector(`label[for="${input.id}"]`);
+        // console.log('option text is ' + optionText);
+        // console.log('correct answer is ' + item.correctAnswer);
         // Перевіряємо, чи правильна відповідь
         if (optionText === item.correctAnswer && item.userAnswer) {
-            console.log('color is changed');
+            //console.log('color is changed');
             // Знаходимо label, що відповідає цьому input
-            const label = document.querySelector(`label[for="${input.id}"]`);
+            //const label = document.querySelector(`label[for="${input.id}"]`);
             
             // Змінюємо фон label на зелений
-            if (label) {
+            //if (label) {
                 label.style.backgroundColor = 'green';
                 label.style.color = 'white';
-            }
+            //}
         }else if(optionText === item.userAnswer){
-            const label = document.querySelector(`label[for="${input.id}"]`);
+            //const label = document.querySelector(`label[for="${input.id}"]`);
             label.style.backgroundColor = 'red';
             label.style.color = 'white';
         }
-    });
-        if (questionElement != null) {
+    })}
+
+        if (questionElement != null && !item.userAnswer.every(element => element === null)) {
+            console.log('label is colored')
             // Додаємо класи для правильних/неправильних відповідей
             if (item.isCorrect) {
                 questionElement.classList.remove('incorrect');
                 questionElement.classList.add('correct');
             } else {
+                console.log(item)
                 questionElement.classList.remove('correct');
                 questionElement.classList.add('incorrect');
             }
-        }}
+        }
     });
+    document.getElementById("submit-test").disabled = true;
 })
 .catch(error => {
         console.error('Error:', error);

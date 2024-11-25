@@ -289,4 +289,11 @@ color: #155724;
 font-size: 0.9em;
 margin-left: 10px;
 }
+.correct {
+  background-color: lightgreen;
+}
+
+.incorrect {
+  background-color: red;
+}
 

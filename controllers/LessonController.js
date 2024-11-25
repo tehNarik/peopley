@@ -29,7 +29,22 @@ const getVideoDuration = (videoURL) => {
 export const getCourseStatistics = async (req, res) => {
   try {
       const lessonCount = await LessonModel.countDocuments();
-      const testCount = await TestModel.countDocuments();
+
+      const totalQuestions = await TestModel.aggregate([
+        {
+          $project: {
+            questionsCount: { $size: "$questions" } // Додаємо кількість елементів у полі "questions"
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalQuestions: { $sum: "$questionsCount" } // Сумуємо всі довжини
+          }
+        }
+      ]);
+      
+      const testCount = totalQuestions.length ? totalQuestions[0].totalQuestions : 0;
       res.render('index', {
           lessonCount,
           testCount
