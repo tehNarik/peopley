@@ -465,16 +465,6 @@ svg {
   padding: 10px;
   font-size: 20px;
 }
-#profile_container .section{
-  display: flex;
-  width: 47%;
-}
-#profile_container{
-  display: flex;
-}
-#profile_container .section:first-child{
-  margin-right: 6%;
-}
 
 #indi_less {
   display: flex;

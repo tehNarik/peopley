@@ -77,6 +77,14 @@
                 </div>
                 <button id="resetProgress" onclick="resetProgress()">Скинути прогрес</button>
             </div>
+            
+            <div id="progressBarsContainer" class="section">
+                
+            </div>
+
+            <div id="smt else" class="section">
+
+            </div>
         </div>
 
 
@@ -205,6 +213,29 @@ document.getElementById('changePasswordButton').addEventListener('click', functi
     showModal('changePasswordModal');
 });
 
+const testsResults = <%- JSON.stringify(testsResults) %>;
+const topics = <%- JSON.stringify(titles) %>;
+const progressBarsContainer = document.getElementById("progressBarsContainer");
+
+testsResults.forEach((result, index) => {
+    if(index<testsResults.length && result>49){
+        progressBarsContainer.innerHTML += `${(index+1)}: ${topics[index]}: 
+        
+            <div class="progress-bar">
+                <a href="/lesson/${index+1}">
+            <div class="progress3" style="width: ${result}%;">${Math.round(result)}%</div></a>
+            </div>
+            `;      
+    }else{
+        progressBarsContainer.innerHTML += `${(index+1)}: ${topics[index]}: 
+    <div class="progress-bar">
+      <div class="progress3" style="width: ${result}%;">${Math.round(result)}%</div>
+    </div>
+  `;}
+
+    
+});
+
     </script>
     <style>
         @keyframes progress-animation {
@@ -221,6 +252,14 @@ document.getElementById('changePasswordButton').addEventListener('click', functi
   }
   100% {
       width: <%= completedPercentage %>%; 
+  }
+}
+@keyframes progress-animation3 {
+  0% {
+      width: 0;
+  }
+  100% {
+      width: <%= testsResults %>%; 
   }
 }
 

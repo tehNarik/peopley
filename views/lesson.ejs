@@ -431,11 +431,7 @@ fetch('/test/pass', {
     console.log(feedback);
     feedback.forEach((item, index) => {
         const questionElement = item.userAnswer ? document.querySelector(`[data-index="${index}"]`) : null;
-        // const inputs = document.querySelectorAll(`input[name="question${index}"]`);
         const inputs = document.querySelectorAll(`input`);
-        //console.log(inputs);
-        //console.log('item is ' + JSON.stringify(item))
-        
     if(item.correctAnswer !== item.userAnswer || Array.isArray(item.correctAnswer)){
         
         inputs.forEach((input, i) => {
@@ -454,27 +450,17 @@ fetch('/test/pass', {
         }
         const optionText = input.getAttribute('data-text');
         const label = document.querySelector(`label[for="${input.id}"]`);
-        // console.log('option text is ' + optionText);
-        // console.log('correct answer is ' + item.correctAnswer);
         // Перевіряємо, чи правильна відповідь
         if (optionText === item.correctAnswer && item.userAnswer) {
-            //console.log('color is changed');
-            // Знаходимо label, що відповідає цьому input
-            //const label = document.querySelector(`label[for="${input.id}"]`);
-            
-            // Змінюємо фон label на зелений
-            //if (label) {
-                label.style.backgroundColor = 'green';
-                label.style.color = 'white';
-            //}
+            label.style.backgroundColor = 'green';
+            label.style.color = 'white';
         }else if(optionText === item.userAnswer){
-            //const label = document.querySelector(`label[for="${input.id}"]`);
             label.style.backgroundColor = 'red';
             label.style.color = 'white';
         }
     })}
-
-        if (questionElement != null && !item.userAnswer.every(element => element === null)) {
+        console.log(item.userAnswer);
+        if (questionElement != null && (!Array.isArray(item.userAnswer) || !item.userAnswer.every(element => element === null))) {
             console.log('label is colored')
             // Додаємо класи для правильних/неправильних відповідей
             if (item.isCorrect) {

@@ -179,8 +179,7 @@ export const pass = async (req, res) => {
 
             return result;
         });
-        const score = (_score * 100) / totalQuestions;
-
+        const score = Math.round((_score * 100) / totalQuestions);
         const userId = req.cookies['userId'];
         let result;
         if (userId) {

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../models/User.js';
 import TestResultModel from '../models/TestResult.js';
 import TestModel from '../models/Test.js';
+import LessonModel from '../models/Lesson.js';
 import TutorModel from '../models/Tutor.js'
 import bcrypt from 'bcryptjs';
 
@@ -97,20 +98,25 @@ export const getMe = async (req, res) => {
 
         // Отримання результатів тестів для поточного користувача
         const allTestResults = await TestResultModel.find({ user: userId });
+        const testsResults = allTestResults.map(result => result.score);
         const totalTestsCount = await TestModel.countDocuments();
         // Обчислення суми оцінок та загальної кількості тестів
         const totalScore = allTestResults.reduce((acc, result) => acc + result.score, 0);
         const totalTests = allTestResults.length;
 
-
         // Обчислення середнього відсотка
         const averagePercentage = totalTests > 0 ? (totalScore / totalTests) : 0;
         const completedPercentage = totalTests / totalTestsCount * 100;
 
+        const lessons = await LessonModel.find();
+        const titles = lessons.map(result => result.title);
+
         res.render('userProfile', {
             ...userData,
             averagePercentage: averagePercentage.toFixed(2), // Передача середнього відсотка
-            completedPercentage
+            completedPercentage,
+            testsResults,
+            titles
         });
 
     } catch (err) {
