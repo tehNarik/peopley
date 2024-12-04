@@ -296,4 +296,6 @@ margin-left: 10px;
 .incorrect {
   background-color: red;
 }
-
+.question p {
+  display: inline-block;
+}

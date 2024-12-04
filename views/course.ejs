@@ -56,6 +56,15 @@
             <p>No lessons available at the moment.</p>
         <% } %>
     </section>
+
+    <section class="section" id="indi_less">
+      <h1>Тренажери</h1>
+      <div class="button-container">
+      <button class="trainer_button" id="exam" >НМТ</button>
+      <button class="trainer_button" id="FSK" >Формули скороченого множення</button>
+      </div>
+    </section>
+
     <section class="section" id="indi_less">
       <div class="button-container">
         <button id="buy-lessons">Хочу індивідуальні уроки</button>
@@ -75,6 +84,9 @@
         });
         document.getElementById('my-lessons').addEventListener('click', function() {
             window.location.href = '/myLessons';  // Перенаправлення на сторінку /lessons
+        });
+        document.getElementById('exam').addEventListener('click', function() {
+            window.location.href = '/exam_trainer';  // Перенаправлення на сторінку /lessons
         });
     const token = localStorage.getItem('token');
 

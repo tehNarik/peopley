@@ -62,7 +62,7 @@ export const addQuestion = async (req, res) => {
         }
 
         // Перевірка наявності дубліката для текстового питання
-        const questionExists = test.questions.some(el => el.questionText === questionText);
+        const questionExists = test.questions.some(el => (el.questionText === questionText && questionText) || (el.questionImageURL === questionImageURL && el.questionText === questionText));
         if (questionExists) {
             return res.status(400).json({ message: "Питання з таким текстом вже існує у цьому тесті." });
         }
@@ -106,7 +106,7 @@ export const addQuestion = async (req, res) => {
 export const pass = async (req, res) => {
     try {
         const { topic, answers } = req.body;
-
+        //console.log(answers)
         // Знайти тест за темою
         const test = await TestModel.findOne({ topic });
         if (!test) {
@@ -169,8 +169,8 @@ export const pass = async (req, res) => {
                 result.userAnswer = userAnswer;
 
                 if (
-                    userAnswer &&
-                    String(userAnswer).trim().toLowerCase() === String(correctAnswer).trim().toLowerCase()
+                    userAnswer.text &&
+                    String(userAnswer.text).trim().toLowerCase() === String(correctAnswer).trim().toLowerCase()
                 ) {
                     result.isCorrect = true;
                     _score += 2;
@@ -223,3 +223,90 @@ export const reset = async (req, res) => {
         });
     }
 }
+
+
+
+export const passExam = async (req, res) => {
+    try {
+        //console.log('pasiing exam')
+        const { test, answers } = req.body;
+        //console.log(test)
+        //console.log(answers)
+        let _score = 0;
+        let totalQuestions = 0;
+
+        const feedback = test.map((question, index) => {
+            let result = { isCorrect: false, correctAnswer: null, userAnswer: null };
+
+            if (question.type === 'choice') {
+                totalQuestions++;
+                const userAnswer = answers[`question${index}`]?.text; // Текст відповіді користувача
+                const correctOption = question.options.find(option => option.isCorrect);
+                //console.log('user answer is ' + userAnswer);
+                result.userAnswer = userAnswer;
+                if (correctOption) {
+                    result.correctAnswer = correctOption.optionText;
+                }
+
+                if (userAnswer && userAnswer === correctOption?.optionText) {
+                    result.isCorrect = true;
+                    _score++;
+                } else {
+                    result.userAnswer = userAnswer;
+                } 
+            } else if (question.type === 'matching') {
+                const userAnswers = [];
+                const correctAnswers = [];
+                let matchingScore = 0;
+
+                question.matchingPairs.forEach((pair, i) => {
+                    if(pair.questionPart!="") totalQuestions++;
+
+                    const userSelectedAnswer = answers[`question${index} questionPart${i}`];
+                    userAnswers.push(userSelectedAnswer);
+                    correctAnswers.push(pair.answerPart);
+                    if (userSelectedAnswer && String(userSelectedAnswer['index']) === String(pair.answerPart)) {
+                        matchingScore++;
+                    }
+                });
+                if(matchingScore == 3){
+                    result.isCorrect = true;
+                }
+
+                result.correctAnswer = correctAnswers;
+                result.userAnswer = userAnswers;
+                
+                _score += matchingScore;
+            } else if (question.type === 'fitting') {
+                totalQuestions += 2;
+
+                const userAnswer = answers[`question${index}`];
+                if(!userAnswer){
+                    return result;
+                }
+                const correctAnswer = question.answer;
+                result.correctAnswer = correctAnswer;
+                result.userAnswer = userAnswer;
+
+                if (
+                    userAnswer.text &&
+                    String(userAnswer.text).trim().toLowerCase() === String(correctAnswer).trim().toLowerCase()
+                ) {
+                    result.isCorrect = true;
+                    _score += 2;
+                }
+            }
+
+            return result;
+        });
+
+        const result = Math.round((_score * 100) / totalQuestions);
+        res.json({
+            result,
+            feedback, // Повертаємо об'єкт з деталями по кожному питанню
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Не вдалося обробити тест' });
+    }
+};

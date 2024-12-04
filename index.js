@@ -68,6 +68,7 @@ app.post('/test', TestController.create)
 app.post('/test/add', TestController.addQuestion)
 
 app.post('/test/pass', TestController.pass)
+app.post('/examPass', TestController.passExam)
 app.delete('/resetProgress',  TestController.reset)
 app.get('/lesson/:numberLesson', LessonController.getOne);
 //app.get('/lessons',  LessonController.getAll);
@@ -168,6 +169,7 @@ app.get('/tutors', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+app.get('/exam_trainer', LessonController.getExam)
 
 
 app.get('/tutors/:id', async (req, res) => {

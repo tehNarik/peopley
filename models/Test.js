@@ -50,6 +50,10 @@ const TestModel = new mongoose.Schema({
         answer: {
             type: String,
             required: function(){ return this.type === 'fitting'}
+        },
+        isPassingExam: {
+            type: Boolean,
+            default: true
         }
     },
     

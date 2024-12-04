@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Урок <%= lesson.numberLesson %> - <%= lesson.title %></title>
+  <title>Тренажер НМТ</title>
   <link rel="stylesheet" href="/index.css">
   <link rel="stylesheet" href="/tests.css">
   <script src="/showLog.js" defer></script>
@@ -32,31 +32,14 @@
   <main>
     <div class="container">
       <section class="section" id="lesson_details">
-        <h2>Урок <%= lesson.numberLesson %>: <%= lesson.title %></h2>
-        <div class="lesson-menu">
-          <button id="lecture-btn" class="active">Лекція</button>
-          <button id="practice-btn" class="inactive">Практика</button>
-        </div>
-        
-
-
-        
-        <div id="lecture-content" class="content-section">
-            <iframe width="560" height="315" 
-          src="<%= lesson.videoURL %>" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-  </iframe>
-        
-        </div>
-        
-        <div id="practice-content" class="content-section" style="display: none;">
+        <h2>Тренажер НМТ</h2>
+     
+          <div id="practice-content" class="content-section">
           <h3>Тест:</h3>
-          <% if (lesson.test) { %>
+          <% if (questionsArray) { %>
             <!-- Додано меню тестів -->
             <div class="test-menu">
-                <% lesson.test.questions.forEach((question, index) => { %>
+                <% questionsArray.forEach((question, index) => { %>
                   <button class="test-menu-item" data-index="<%= index %>" data-question-id="question-<%= index %>">
                     <%= index + 1 %>
                 </button>
@@ -68,9 +51,9 @@
           <div id="test-container">
               <form id="test-form">
                   <div id="question-container">
-                      <% if (lesson.test) { %>
+                      <% if (questionsArray) { %>
                           <% let counter = 0;
-                          lesson.test.questions.forEach((question, index) => { %>
+                          questionsArray.forEach((question, index) => { %>
                             <div class="question" id="question-<%= index %>" data-type="<%= question.type %>" style="display: <%= index === 0 ? 'block' : 'none' %>;">
                                   <p> <%= index + 1 %>. <%= question.questionText %></p>
                                   <% if (question.questionImageURL) { %>
@@ -134,7 +117,9 @@ const answerLabels = alphabet.slice(0, question.matchingPairs.length);
 <tbody>
     <% question.matchingPairs.forEach((pair, i) => { %>
         <tr>
+            
           <% if (pair.questionPart != "") { %>
+            
             <!-- Відображаємо частину питання (questionPart) без змін -->
             <td><%= i + 1 %>. <%= pair.questionPart %></td>
             <% }else{ %>
@@ -182,13 +167,6 @@ const answerLabels = alphabet.slice(0, question.matchingPairs.length);
 </div>
 
 </div>
-
-                                  
-                                  
-                                  
-                                  
-                                  
-                                  
                                   <% }else if (question.type === 'fitting') { %>
                                     <div class="fitting-answer">
                                         <input type="text" name="question<%= index %>" id="fitting-question-<%= index %>" placeholder="Ваша відповідь" />
@@ -217,53 +195,7 @@ const answerLabels = alphabet.slice(0, question.matchingPairs.length);
 
   </footer>    
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-    const questions = document.querySelectorAll(".question");
-    const testMenuItems = document.querySelectorAll(".test-menu-item");
-    const prevButton = document.getElementById("prev-question");
-    const nextButton = document.getElementById("next-question");
-    const submitButton = document.getElementById("submit-test");
-
-    let currentQuestionIndex = 0;
-
-    const showQuestion = (index) => {
-        questions.forEach((question, i) => {
-            question.style.display = i === index ? "block" : "none";
-        });
-        currentQuestionIndex = index;
-
-        // Активувати/деактивувати кнопки
-        prevButton.disabled = index === 0;
-        nextButton.style.display = index === questions.length - 1 ? "none" : "inline-block";
-        submitButton.style.display = index === questions.length - 1 ? "inline-block" : "none";
-
-        // Підсвітити активне питання в меню
-        testMenuItems.forEach((item, i) => {
-            item.classList.toggle("active", i === index);
-        });
-    };
-
-    // Перехід за допомогою меню
-    testMenuItems.forEach((item, index) => {
-        item.addEventListener("click", () => showQuestion(index));
-    });
-
-    // Навігація кнопками
-    prevButton.addEventListener("click", () => {
-        if (currentQuestionIndex > 0) {
-            showQuestion(currentQuestionIndex - 1);
-        }
-    });
-
-    nextButton.addEventListener("click", () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            showQuestion(currentQuestionIndex + 1);
-        }
-    });
-
-    // Почати з першого питання
-    showQuestion(0);
-});
+    
 
     function selectAnswer(questionIndex, answer) {
         // Встановлюємо вибраний варіант відповіді у відповідний елемент таблиці
@@ -349,25 +281,9 @@ const answerLabels = alphabet.slice(0, question.matchingPairs.length);
 
 </script>
   <script>
-    document.getElementById('lecture-btn').addEventListener('click', function() {
-  document.getElementById('lecture-content').style.display = 'block';
-  document.getElementById('practice-content').style.display = 'none';
-  // Змінюємо класи
-  this.classList.add('active');
-  this.classList.remove('inactive');
-  document.getElementById('practice-btn').classList.add('inactive');
-  document.getElementById('practice-btn').classList.remove('active');
-});
-document.getElementById('practice-btn').addEventListener('click', function() {
-      document.getElementById('lecture-content').style.display = 'none';
-      document.getElementById('practice-content').style.display = 'block';
-      this.classList.add('active');
-      this.classList.remove('inactive');
-      document.getElementById('lecture-btn').classList.add('inactive');
-      document.getElementById('lecture-btn').classList.remove('active');});
 
     let currentQuestionIndex = 0;
-    const totalQuestions = <%= lesson.test ? lesson.test.questions.length : 0 %>;
+    const totalQuestions = <%= questionsArray ? questionsArray.length : 0 %>;
 
     const showQuestion = (index) => {
       document.querySelectorAll('.question').forEach((question, i) => {
@@ -412,6 +328,7 @@ formData.forEach((value, key) => {
             text: optionText // Текст вибраної відповіді
         };
     }
+    //console.log("key is " + key)
 });
 
 const inputs = document.querySelectorAll('input[type="text"]');
@@ -431,22 +348,21 @@ const result = Array.from(inputs)
         // };
     });
 
-
-fetch('/test/pass', {
+fetch('/examPass', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-        topic: '<%= lesson.title %>',
+        test: <%- JSON.stringify(questionsArray) %>,
         answers: answers
     })
 })
 .then(response => response.json())
 .then(data => {
-    alert('Тест успішно здано! Отримано ' + data.result.score + ' балів!');
+    alert('Тест успішно здано! Отримано ' + data.result + ' балів!');
     const feedback = data.feedback; // Використовуємо `feedback`, що повертається з сервера
-    //console.log(feedback);
+    console.log(feedback);
     feedback.forEach((item, index) => {
         const questionElement = item.userAnswer ? document.querySelector(`[data-index="${index}"]`) : null;
         const inputs = document.querySelectorAll(`input`);
@@ -477,15 +393,15 @@ fetch('/test/pass', {
             label.style.color = 'white';
         }
     })}
-        //console.log(item.userAnswer);
+        console.log(item.userAnswer);
         if (questionElement != null && (!Array.isArray(item.userAnswer) || !item.userAnswer.every(element => element === null))) {
-            //console.log('label is colored')
+            console.log('label is colored')
             // Додаємо класи для правильних/неправильних відповідей
             if (item.isCorrect) {
                 questionElement.classList.remove('incorrect');
                 questionElement.classList.add('correct');
             } else {
-                //console.log(item)
+                console.log(item)
                 questionElement.classList.remove('correct');
                 questionElement.classList.add('incorrect');
             }
@@ -498,9 +414,6 @@ fetch('/test/pass', {
         alert('Помилка. Зареєструйтеся на курсі, щоб зберігати результати, і в разі повторної помилки, зверніться, будь ласка, до мене в телеграм.');
     });
 });
-
-
-
 
 
     // Показати перше питання при завантаженні сторінки
