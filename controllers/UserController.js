@@ -4,6 +4,7 @@ import TestResultModel from '../models/TestResult.js';
 import TestModel from '../models/Test.js';
 import LessonModel from '../models/Lesson.js';
 import TutorModel from '../models/Tutor.js'
+import ReviewModel from '../models/review.js'
 import bcrypt from 'bcryptjs';
 
 // Реєстрація
@@ -248,5 +249,76 @@ export const registerTutor = async (req, res) => {
         res.status(500).json({
             message: "Не вдалося зареєструватися"
         });
+    }
+};
+
+
+
+// Отримати інформацію про себе
+export const getReviews = async (req, res) => {
+    try {
+        const reviews = await ReviewModel.find();
+        res.render('reviews', { reviews });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            message: "Не вдалося отримати інформацію"
+        });
+    }
+};
+
+export const addReview = async (req, res) => {
+    try {
+        const { anonymous, description, mark } = req.body;
+        const userId = req.cookies['userId'];    
+        const user = await UserModel.findById(userId);
+        if(!user){
+            return res.status(401).json({ message: 'Щоб залишити відгук, ви повинні авторизуватися.' });
+        }
+        let name = user.fullName;
+        const rev = await ReviewModel.findOne({name});
+        
+        if(rev){
+            const updatedReview = await ReviewModel.findOneAndUpdate(
+                { name },  // критерій пошуку
+                { 
+                  $set: { name, description, mark, anonymous }
+                },  // нові значення для оновлення
+                { new: true }  // повернути оновлений документ
+              );
+              res.status(201).json({ message: 'Відгук успішно оновлено.', review: updatedReview });
+        }else{
+            const newReview = new ReviewModel({name, description, mark, anonymous });
+
+            await newReview.save();
+
+            res.status(201).json({ message: 'Відгук успішно додано.', review: newReview });
+        }
+        // // Перевірка наявності всіх необхідних даних
+        // if ( !description || !mark) {
+        //     return res.status(400).json({ message: 'Всі поля повинні бути заповнені.' });
+        // }
+        // const userId = req.cookies['userId'];    
+        // const user = await UserModel.findById(userId);
+        
+        // let name;
+        // // Перевірка, чи існує відгук з таким ім'ям
+        // if(user){
+        //     name = user.fullName;
+        // const existingReview = await Review.findOne({ name });
+        // if (existingReview) {
+        //     // Видалення існуючого відгуку
+        //     await Review.deleteOne({ name });
+        //     //return res.status(200).json({ message: 'Існуючий відгук видалено.' });
+        // }
+        // if(!name){
+        //     name = "Анонім";
+        // }
+        // Створення нового відгуку
+
+        
+    } catch (error) {
+        console.error('Помилка при додаванні відгуку:', error);
+        res.status(500).json({ message: 'Не вдалося додати відгук. Спробуйте пізніше.' });
     }
 };

@@ -170,10 +170,7 @@ button#logoutButton, button#resetProgress, .change {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
-  .change{
-    background-color: #3c00d3;
-    padding-top: 10px;
-  }
+  
   
   button#logoutButton:hover {
     background-color: #ff1c38;
@@ -181,6 +178,14 @@ button#logoutButton, button#resetProgress, .change {
   }
   button#resetProgress:hover {
     background-color: #ff1c38;
+    transform: scale(1.05);
+  }
+  .change{
+    background-color: #3c00d3;
+    padding-top: 10px;
+  }
+  button.change:hover {
+    background-color: #1741ff;
     transform: scale(1.05);
   }
   

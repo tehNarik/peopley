@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Відгуки</title>
+  <link rel="stylesheet" href="/index.css">
+  <script src="/showLog.js" defer></script> 
+</head>
+<style>
+  
+
+.section h2, {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: rgb(108, 231, 108);
+    border: 1px solid #ddd; /* Рамка */
+    border-radius: 8px; /* Закруглені кути */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Тінь */
+}
+
+.review-item h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #333;
+}
+
+.review-item p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.review-item span {
+    font-weight: bold;
+    color: #007bff; /* Синій колір тексту */
+}
+.change{
+    background-color: #ff4b5c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #3c00d3;
+    padding-top: 10px;
+    
+  }
+  button.change:hover {
+    background-color: #1741ff;
+    transform: scale(1.05);
+  }
+  .section {
+    text-align: center;
+}
+.change {
+    margin: 10px auto; /* Для відступів, якщо потрібно */
+}
+
+/* Загальний стиль для модальних вікон */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Напівпрозорий чорний фон */
+  backdrop-filter: blur(5px); /* Розмиття фону */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Стиль для контенту модального вікна */
+.modal-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 400px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Тінь для ефекту глибини */
+  position: relative;
+  z-index: 1001;
+  text-align: center;
+  background: linear-gradient(135deg, #6e89ff, #b3a8ff); /* Градієнт фону */
+  color: #fff;
+}
+
+/* Стиль для кнопки закриття */
+.close {
+  color: #fff;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+  color: #f1c40f;
+}
+
+/* Стиль для форм */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-content label {
+  font-weight: bold;
+  text-align: left;
+  color: #f0f0f0;
+}
+
+.modal-content input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+}
+
+.modal-content input:focus {
+  outline: none;
+  border: 2px solid #f0f0f0;
+}
+
+
+
+.modal-content button:hover {
+  background-color: #2980b9;
+}
+
+/* Стиль для активного модального вікна */
+.show {
+  display: flex;
+}
+
+/* Додатковий ефект при з'явленні */
+@keyframes modal-appearance {
+  0% {
+      transform: scale(0.7);
+      opacity: 0;
+  }
+  100% {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+.modal-content {
+  animation: modal-appearance 0.3s ease-out;
+}
+.modal-content button {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .rating {
+    display: flex;
+    flex-direction: row-reverse; /* Зірочки відображаються справа наліво */
+    justify-content: center;
+}
+
+.rating input {
+    display: none; /* Приховуємо радіокнопки */
+}
+
+.rating label {
+    font-size: 2rem;
+    color: #e7e7e7;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.rating input:checked ~ label {
+    color: #ffc107; /* Жовтий колір для вибраних зірочок */
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #ffc107; /* Жовтий колір при наведенні */
+}
+
+</style>
+<body>
+    <header>
+        <img src="/logo.png" alt="Logo" id="header-logo">
+        <div class="container1">
+            
+            <h1 id="title">Курс з Математики</h1>
+        </div>  
+            <div class="menu_button" id="authBlock">
+                <p class="text" id="auth"><a href="#">Авторизація</a></p>
+                <div class="dropdown-content">
+                    <button onclick="window.location.href='/auth/login.html'">Ввійти</button>
+                    <button onclick="window.location.href='/auth/register.html'">Зареєструватися</button>
+                </div>
+            </div>
+            <div class="menu_button"><a href="/" >Головна</a></div>
+            <div class="menu_button"><a href="/lessons" >Курс</a></div>
+            <div class="menu_button" id="profile"><a href="/profile">Профіль</a></div>
+            <div class="menu_button" id="reviews"><a href="/reviews">Відгуки</a></div>
+    </header>
+
+    <main>
+        <div id="changeNameModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('changeNameModal')">&times;</span>
+                <h2>Оцінити курс</h2>
+                <form id="changeNameForm" onsubmit="changeName(event)">
+                    <div class="rating">
+                        <input type="radio" id="star5" name="rating" value="5" required>
+                        <label for="star5" title="5 stars">★</label>
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4" title="4 stars">★</label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3" title="3 stars">★</label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2" title="2 stars">★</label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1" title="1 star">★</label>
+                    </div>
+                    <label for="description">Опишіть ваші враження від курсу:</label>
+                    <input type="text" id="description" name="description" required> 
+                    <div class="anonymous">
+                        <input type="checkbox" id="anonymous" name="anonymous">
+                        <label for="anonymous">Хочу залишити відгук анонімно</label>
+                    </div>
+                    <button type="submit">Відправити відгук</button>
+                </form>
+            </div>
+        </div>
+        
+
+
+
+        <div class="container">
+            <section class="section">
+                <h2>Відгуки</h2>
+                <p>У даному розділі ви можете бачити відгуки моїх індивідуальних учнів або тих, які придбали даний курс. Ти також учасник курсу? Залиш відгук і допоможи зробити цей курс кращим! 🙏</p>
+                <button class="change" id="changeNameButton">Додати відгук</button>
+            </section>
+            <section class="section">
+                <% if (reviews.length > 0) { %>
+                    <ul>
+                        <% reviews.forEach(review => { %>
+                            <li>
+                                <% if (!review.anonymous) { %>
+                                <h3><%=  review.name %></h3>
+                                <% } else { %>
+                                <h3>Анонім</h3>
+                                <% }  %>
+                                <p><%= review.description %></p>
+                                <span>Оцінка: <%= review.mark %>/5</span>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <p>Відгуків поки що немає.</p>
+                <% } %>
+            </section>
+        </div>
+    </main>
+<script>
+    // Функція для показу модального вікна
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.body.classList.add('modal-open');
+}
+
+// Функція для закриття модального вікна
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    document.body.classList.remove('modal-open');
+}
+
+// Відкриття модального вікна при натисканні на кнопку
+document.getElementById('changeNameButton').addEventListener('click', function() {
+    showModal('changeNameModal');
+});
+
+document.getElementById('changePasswordButton').addEventListener('click', function() {
+    showModal('changePasswordModal');
+});
+// Функція для обробки надсилання форми
+function changeName(event) {
+    event.preventDefault();  // запобігає перезавантаженню сторінки при надсиланні форми
+    
+    // Отримуємо значення з форми
+    const rating = document.querySelector('input[name="rating"]:checked').value;
+    const description = document.getElementById('description').value;
+    const anonymous = document.getElementById('anonymous').checked;
+
+    // Створюємо об'єкт даних для відправки
+    const reviewData = {
+        anonymous: anonymous,
+        description: description,
+        mark: rating
+    };
+
+    // Відправка даних на сервер через Fetch API
+    fetch('/reviews', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                alert(data.message); // Показуємо alert із повідомленням
+                throw new Error(data.message);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Відгук надіслано:', data);
+        // Закриваємо модальне вікно після успішної відправки
+        closeModal('changeNameModal');
+    })
+    .catch(error => {
+        console.error('Помилка при надсиланні відгуку:', error);
+    });
+}
+
+</script>
+    
+</body>
+</html>

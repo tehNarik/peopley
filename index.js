@@ -224,6 +224,9 @@ app.post('/lessons', async (req, res) => {
     }
 });
 
+app.get('/reviews', UserController.getReviews)
+app.post('/reviews', UserController.addReview)
+
 
 
 const PORT = process.env.PORT || 4445;
