@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+# Коли запускати воркфлоу
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch: # Дозволяє запуск вручну
+
+# Набір завдань
+jobs:
+  build:
+    runs-on: ubuntu-latest # Використовується остання версія Ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # Клонування коду репозиторія
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # Вкажіть версію Node.js
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
+  
+  deploy:
+    needs: build # Залежить від успішного виконання build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: HRKU-d789bcac-1b8a-4ab5-b24c-7a92047c8c00 # Зберігається у Secrets
+        run: |
+          npm install -g heroku
+          heroku container:login
+          heroku container:push web --app peopley
+          heroku container:release web --app peopley
