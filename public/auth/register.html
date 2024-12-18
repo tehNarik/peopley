@@ -59,7 +59,8 @@
                 //alert('Реєстрація успішна!');
                 window.location.href = '/';
             } else {
-                alert(data.message || 'Щось пішло не так');
+                const errorMessages = data.map(error => error.msg).join('\n');
+                alert(errorMessages || 'Щось пішло не так');
             }
         } catch (error) {
             console.error('Помилка:', error);

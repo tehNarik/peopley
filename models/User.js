@@ -3,9 +3,7 @@ import mongoose from 'mongoose';
 const UserModel = new mongoose.Schema({
     fullName: {
         type: String,
-        required: true,
-        min: 3,
-        max: 50
+        required: true
     },
     email: {
         type: String,
