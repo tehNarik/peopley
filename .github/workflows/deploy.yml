@@ -19,7 +19,7 @@ jobs:
 
       - name: Login to Heroku
         run: |
-          echo HRKU-68033b81-292b-487f-b95c-610150d1d474 | heroku auth:token
+          echo HRKU-d789bcac-1b8a-4ab5-b24c-7a92047c8c00 | heroku auth:token
 
       - name: Add Heroku remote
         run: |
