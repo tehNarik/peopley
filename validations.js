@@ -1,7 +1,7 @@
 import { body } from 'express-validator';
 
 export const loginValidator = [
-    body('email').isEmail(),
+    body('email', 'Неправильний email, сходіть до лікаря').isEmail(),
     body('password', 'Пароль має бути від 6 до 30 символів і містити велику літеру, маленьку літеру та цифру')
         .isLength({ min: 6, max: 30 })
         .matches(/[a-z]/) // Мала літера
@@ -10,7 +10,7 @@ export const loginValidator = [
 ];
 
 export const registerValidator = [
-    body('email').isEmail(),
+    body('email', 'Неправильний email, сходіть до лікаря').isEmail(),
     body('password', 'Пароль має бути від 6 до 30 символів і містити велику літеру, маленьку літеру та цифру')
         .isLength({ min: 6, max: 30 })
         .matches(/[a-z]/) // Мала літера
