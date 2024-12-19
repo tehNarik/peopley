@@ -22,7 +22,8 @@ jobs:
       # Крок 3: Логін до Heroku за допомогою токена
       - name: Login to Heroku
         run: |
-          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
+            echo "${{ secrets.HEROKU_API_KEY }}" | heroku auth:token
+
 
       # Крок 4: Додавання віддаленого репозиторію Heroku
       - name: Add Heroku remote
