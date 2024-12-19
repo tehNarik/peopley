@@ -15,16 +15,21 @@ jobs:
         uses: actions/checkout@v2
 
       # Крок 2: Встановлення Heroku CLI
-      - name: Set up Heroku CLI
-        uses: akshnz/heroku-cli-action@v1.0.0
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
 
-      # Крок 3: Логін до Heroku
+      # Крок 3: Логін до Heroku за допомогою токена
       - name: Login to Heroku
         run: |
           echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
 
-      # Крок 4: Деплой на Heroku
-      - name: Deploy to Heroku
+      # Крок 4: Додавання віддаленого репозиторію Heroku
+      - name: Add Heroku remote
         run: |
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+
+      # Крок 5: Деплой на Heroku
+      - name: Deploy to Heroku
+        run: |
           git push heroku main
