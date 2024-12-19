@@ -32,40 +32,47 @@
 
 </body>
 <script>
-    document.getElementById('registerForm').addEventListener('submit', async (event) => {
-        event.preventDefault(); 
-        
-        const email = document.getElementById('email').value;
-        const fullName = document.getElementById('fullName').value;
-        const password = document.getElementById('password').value;
-        
-        try {
-            const response = await fetch('/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    fullName,
-                    password,
-                }),
-            });
+   document.getElementById('registerForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); 
 
-            const data = await response.json();
-            if (response.ok) {
-                localStorage.setItem('token', data.token);
-                document.cookie = `token=${data.token}; path=/; secure; samesite=strict; max-age=86400`; // збереження на 1 день
-                //alert('Реєстрація успішна!');
-                window.location.href = '/';
+    const email = document.getElementById('email').value;
+    const fullName = document.getElementById('fullName').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const response = await fetch('/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                fullName,
+                password,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem('token', data.token);
+            document.cookie = `token=${data.token}; path=/; secure; samesite=strict; max-age=86400`; // збереження на 1 день
+            window.location.href = '/';
+        } else {
+            // Якщо статус 400 (наприклад, електронна пошта вже існує)
+            if (response.status === 401) {
+                alert(data.message || 'Помилка реєстрації: Користувач з такою електронною поштою вже існує');
             } else {
-                const errorMessages = data.map(error => error.msg).join('\n');
+                const errorMessages = [...new Set(data.map(error => error.msg))].join('\n');
                 alert(errorMessages || 'Щось пішло не так');
             }
-        } catch (error) {
-            console.error('Помилка:', error);
         }
-         // Функція для отримання кукі
+    } catch (error) {
+        console.error('Помилка:', error);
+        alert('Щось пішло не так');
+    }
+
+    // Функція для отримання кукі
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -86,6 +93,7 @@
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
     }
-    });
+});
+
 </script>
 </html>

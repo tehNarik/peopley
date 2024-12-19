@@ -13,7 +13,11 @@ export const register = async (req, res) => {
         const password = req.body.password;
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-
+        const existingUser = await UserModel.findOne({ email: req.body.email });
+    if (existingUser) {
+        // Якщо такий користувач вже є, повертаємо помилку
+        return res.status(401).json({ message: "Користувач з такою електронною поштою вже існує" });
+    }
         const doc = new UserModel({
             email: req.body.email,
             fullName: req.body.fullName,
