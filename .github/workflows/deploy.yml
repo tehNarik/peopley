@@ -3,34 +3,28 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main  # або ваша гілка для деплою
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Крок 1: Checkout коду з репозиторію
       - name: Checkout code
-        uses: actions/checkout@v3  # Використовуємо останню версію actions/checkout
+        uses: actions/checkout@v3
 
-      # Крок 2: Встановлення Heroku CLI
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
-      # Крок 3: Логін до Heroku за допомогою токена
       - name: Login to Heroku
         run: |
-            echo "${{ secrets.HEROKU_API_KEY }}" | heroku auth:token
+          echo "HRKU-68033b81-292b-487f-b95c-610150d1d474" | heroku auth:token
 
-
-      # Крок 4: Додавання віддаленого репозиторію Heroku
       - name: Add Heroku remote
         run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git remote add heroku https://git.heroku.com/peopley.git
 
-      # Крок 5: Деплой на Heroku
       - name: Deploy to Heroku
         run: |
           git push heroku main
