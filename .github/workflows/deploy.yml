@@ -3,34 +3,28 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main
-    tags:
-      - 'v*.*.*'
+      - main  # або ваша гілка для деплою
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Крок 1: Checkout коду з репозиторію
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      # Крок 2: Встановлення Heroku CLI
+      - name: Set up Heroku CLI
+        uses: akshnz/heroku-cli-action@v1.0.0
 
-    - name: Install dependencies
-      run: npm install
+      # Крок 3: Логін до Heroku
+      - name: Login to Heroku
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
 
-    - name: Run tests
-      run: npm test
-
-    - name: Build project
-      run: npm run build
-
-    - name: Deploy to Heroku
-      uses: akshnz/heroku-deploy@v1.4.0
-      with:
-        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+      # Крок 4: Деплой на Heroku
+      - name: Deploy to Heroku
+        run: |
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git push heroku main
