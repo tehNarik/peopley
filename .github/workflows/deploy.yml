@@ -7,11 +7,38 @@ jobs:
   build:
     runs-on: ubuntu-latest # Setup an environment to run the action
     steps:
+      # Крок 1: Копіювання репозиторію
       - uses: actions/checkout@v2 # This action copies the repository on the environment
+      
+      # Крок 2: Встановлення Node.js потрібної версії
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Вкажіть потрібну версію Node.js
+      
+      # Крок 3: Встановлення залежностей
+      - name: Install dependencies
+        run: |
+          npm install
+      
+      # Крок 4: Виконання збірки проекту
+      - name: Build the project
+        run: |
+          npm run build
+
+      # Крок 5: Запуск тестів
+      - name: Run tests
+        run: |
+          npm test
+
+      # Крок 6: Встановлення Heroku CLI
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This action deploys the content on Heroku
+      
+      # Крок 7: Розгортання на Heroku, якщо всі тести пройдено
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }} # The Heroku API key we stored in our repo secrets
           heroku_app_name: "peopley" # The name of your Heroku app - Must be unique in Heroku
