@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+//import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const TestModel = new mongoose.Schema({
     topic: { // тема якій належить тест
@@ -64,4 +65,5 @@ const TestModel = new mongoose.Schema({
     }
     
 })
-export default mongoose.model('test', TestModel);
+//export default mongoose.model('test', TestModel);
+module.exports = mongoose.model('test', TestModel);

@@ -1,22 +1,22 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import {registerValidator, loginValidator} from './validations.js';
-import {handleValidationErrors, checkAuth} from './utils/index.js'
-import authenticateToken from './middleware/authenticateToken.js'
-import cookieParser from 'cookie-parser'
-import TutorModel from './models/Tutor.js'; 
-import UserModel from './models/User.js'
-import IndividualLessonModel from './models/IndividualLesson.js'; // імпорт моделі уроку
-import TestModel from './models/Test.js'; // імпорт моделі уроку
+const express = require('express');
+const mongoose = require('mongoose');
+const { registerValidator, loginValidator } = require('./validations.js');
+const { handleValidationErrors, checkAuth } = require('./utils/index.js');
+const authenticateToken = require('./middleware/authenticateToken.js');
+const cookieParser = require('cookie-parser');
+const TutorModel = require('./models/Tutor.js');
+const UserModel = require('./models/User.js');
+const IndividualLessonModel = require('./models/IndividualLesson.js'); // імпорт моделі уроку
+const TestModel = require('./models/Test.js'); // імпорт моделі уроку
 
-import multer from 'multer'
-//import {register, login, getMe} from './controllers/UserController.js'
+const multer = require('multer');
+// const { register, login, getMe } = require('./controllers/UserController.js');
 
-import {UserController, LessonController, TestController} from './controllers/index.js'
-import jwt from 'jsonwebtoken';
+const { UserController, LessonController, TestController } = require('./controllers/index.cjs');
+const jwt = require('jsonwebtoken');
 
 //mongodb+srv://2016mishasimonenko:ZAc39Wt7pMIgXE35@cluster0.ixuqn.mongodb.net/course?retryWrites=true&w=majority&appName=Cluster0
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
 
 
@@ -104,7 +104,7 @@ app.get('/myLessons', async (req, res) => {
 });
 
 
-import axios from 'axios';
+
 
 // // Контролер для призначення уроку і створення Zoom зустрічі
 // app.post('/scheduleLesson', async (req, res) => {

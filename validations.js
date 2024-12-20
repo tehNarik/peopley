@@ -1,6 +1,6 @@
-import { body } from 'express-validator';
+const {body} = require('express-validator');
 
-export const loginValidator = [
+const loginValidator = [
     body('email', 'Неправильний формат email').isEmail(),
     body('password', 'Пароль має бути від 6 до 30 символів і містити велику літеру, маленьку літеру та цифру')
         .isLength({ min: 6, max: 30 })
@@ -9,7 +9,7 @@ export const loginValidator = [
         .matches(/\d/),    // Цифра
 ];
 
-export const registerValidator = [
+const registerValidator = [
     body('email', 'Неправильний формат email').isEmail(),
     body('password', 'Пароль має бути від 6 до 30 символів і містити велику літеру, маленьку літеру та цифру')
         .isLength({ min: 6, max: 30 })
@@ -20,7 +20,7 @@ export const registerValidator = [
         .isLength({ min: 4, max: 50 }),
     body('avatarUrl').optional().isURL(),
 ];
-
+module.exports = {loginValidator, registerValidator}
 /*export const postCreateValidation = [
     body('title').isLength({min: 3}).isString(),
     body('text').isLength({min: 10}).isString()

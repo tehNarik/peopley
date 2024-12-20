@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const IndividualLessonModel = new mongoose.Schema({
   dayNumber: { type: Number, required: true },
@@ -7,4 +7,5 @@ const IndividualLessonModel = new mongoose.Schema({
   student: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }
 });
 
-export default mongoose.model('IndividualLesson', IndividualLessonModel);
+//export default mongoose.model('IndividualLesson', IndividualLessonModel);
+module.exports = mongoose.model('IndividualLesson', IndividualLessonModel);

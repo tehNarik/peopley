@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
+//import mongoose from 'mongoose';
 //import TestModel from './Test.js'
+const mongoose = require('mongoose');
 
 const LessonModel = new mongoose.Schema({
     title: {
@@ -27,4 +28,5 @@ const LessonModel = new mongoose.Schema({
     },
 })
 
-export default mongoose.model('Lesson', LessonModel);
+//export default mongoose.model('Lesson', LessonModel);
+module.exports = mongoose.model('Lesson', LessonModel);

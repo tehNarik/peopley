@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const TutorModel = new mongoose.Schema({
     fullName: {
@@ -60,4 +60,5 @@ const TutorModel = new mongoose.Schema({
 },
 );
 
-export default mongoose.model('tutor', TutorModel);
+//export default mongoose.model('tutor', TutorModel);
+module.exports = mongoose.model('tutor', TutorModel);

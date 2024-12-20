@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ReviewModel = new mongoose.Schema({
     name: {
@@ -23,4 +23,5 @@ const ReviewModel = new mongoose.Schema({
     timestamps: true // Додає поля createdAt і updatedAt
 });
 
-export default mongoose.model('Review', ReviewModel);
+//export default mongoose.model('Review', ReviewModel);
+module.exports = mongoose.model('Review', ReviewModel);

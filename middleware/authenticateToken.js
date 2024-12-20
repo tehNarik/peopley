@@ -1,7 +1,6 @@
-import jwt from 'jsonwebtoken';
-import UserModel from '../models/User.js'; // Модель користувача
+const jwt = require('jsonwebtoken');
 
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     

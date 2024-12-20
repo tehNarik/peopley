@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-
+//import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const TestResultModel = new mongoose.Schema({
     topic: {
         type: String,
@@ -15,4 +15,5 @@ const TestResultModel = new mongoose.Schema({
         required: true
     }
 })
-export default mongoose.model('testResult', TestResultModel)
+//export default mongoose.model('testResult', TestResultModel)
+module.exports = mongoose.model('testResult', TestResultModel);
