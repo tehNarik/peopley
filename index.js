@@ -8,9 +8,7 @@ const TutorModel = require('./models/Tutor.js');
 const UserModel = require('./models/User.js');
 const IndividualLessonModel = require('./models/IndividualLesson.js'); // імпорт моделі уроку
 const TestModel = require('./models/Test.js'); // імпорт моделі уроку
-
 const multer = require('multer');
-// const { register, login, getMe } = require('./controllers/UserController.js');
 
 const { UserController, LessonController, TestController } = require('./controllers/index.cjs');
 const jwt = require('jsonwebtoken');
@@ -23,11 +21,6 @@ dotenv.config();
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('DB ok'))
     .catch(err => console.log('DB connection error:', err));
-
-// mongoose.connect('mongodb+srv://2016mishasimonenko:ZAc39Wt7pMIgXE35@cluster0.ixuqn.mongodb.net/course?retryWrites=true&w=majority&appName=Cluster0')
-// .then(()=> console.log('DB ok'))
-// .catch((err)=> console.log('DB error', err));
-
 
 const app = express()
 app.set('view engine', 'ejs');

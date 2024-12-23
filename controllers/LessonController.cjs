@@ -101,14 +101,6 @@ const getOne = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    //const userId = req.user.id; // ID користувача
-    // Використовуйте userId для отримання результатів тестів з бази даних
-    /*const testResults = await TestResultModel.find({ user: userId });
-
-    const passedLessons = testResults.reduce((acc, result) => {
-      acc[result.topic] = result.score >= 50;
-      return acc;
-    }, {});*/
     const userId = req.cookies['userId'];
     const lessons = await LessonModel.find().populate('test');
     lessons.sort((a, b) => a.numberLesson - b.numberLesson);
@@ -545,6 +537,13 @@ const fittingTasks = await TestModel.aggregate([
     } 
   }
 ]);
+
+
+
+// Перевіряємо, чи всі запити повернули дані
+if (!difficulty2 || !difficulty3 || !teoricQuestion || !difficulty4 || !matchingTasks) {
+  return res.status(500).json({ message: 'Не вдалося отримати питання' });
+}
 
 const questionsArray = [];
 //console.log(difficulty2[0].questions[0].questions)

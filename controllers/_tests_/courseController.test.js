@@ -72,18 +72,30 @@ describe('Lesson Controller', () => {
   });
 
   describe('getOne', () => {
-    it('повинен повернути урок із питаннями', async () => {
-      LessonModel.findOne.mockResolvedValue({
-        numberLesson: 1,
-        test: { questions: [{ type: 'choice' }, { type: 'matching', matchingPairs: [1, 2] }] },
-      });
-      req.params = { numberLesson: 1 };
-
+    it('повинен повернути помилку, якщо урок не знайдено', async () => {
+      // Мок даних уроку
+      LessonModel.findOne.mockResolvedValue(null); // урок не знайдений
+    
+      const req = { params: { numberLesson: 1 } };
+    
+      // Мок об'єкта res з усіма необхідними методами
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        render: jest.fn()
+      };
+    
+      // Виклик функції
       await getOne(req, res);
-
-      expect(LessonModel.findOne).toHaveBeenCalledWith({ numberLesson: 1 });
-      //expect(res.render).toHaveBeenCalledWith('lesson', expect.any(Object));
+    
+      // Перевірка, чи був викликаний status(500)
+      expect(res.status).toHaveBeenCalledWith(500);
+    
+      // Перевірка, чи був викликаний json з правильним повідомленням
+      expect(res.json).toHaveBeenCalledWith({ message: "Не вдалося завантажити урок" });
     });
+    
+   
 
     it('повинен повернути помилку, якщо урок не знайдено', async () => {
   const req = { params: { id: 'nonexistentId' } };
@@ -110,18 +122,35 @@ describe('Lesson Controller', () => {
 
   describe('getAll', () => {
     it('повинен повернути список уроків із доступністю', async () => {
-      LessonModel.find.mockResolvedValue([
-        { title: 'Lesson 1', accessible: true },
-        { title: 'Lesson 2', accessible: false },
+      const req = { cookies: { userId: 'user123' } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        render: jest.fn(),
+      };
+  
+      LessonModel.find.mockReturnValue({
+        populate: jest.fn().mockResolvedValue([
+          { numberLesson: 1, title: 'Lesson 1', test: { topic: 'topic1' }, toObject: jest.fn().mockReturnValue({ title: 'Lesson 1' }) },
+          { numberLesson: 2, title: 'Lesson 2', test: { topic: 'topic2' }, toObject: jest.fn().mockReturnValue({ title: 'Lesson 2' }) },
+        ]),
+      });
+  
+      TestResultModel.find.mockResolvedValue([
+        { topic: 'topic1', score: 60 }, // Тест пройдено
       ]);
-
+  
       await getAll(req, res);
-
-      //expect(LessonModel.find).toHaveBeenCalled();
-      // expect(res.json).toHaveBeenCalledWith([
-      //   { title: 'Lesson 1', accessible: true },
-      //   { title: 'Lesson 2', accessible: false },
-      // ]);
+  
+      expect(LessonModel.find).toHaveBeenCalled();
+      expect(TestResultModel.find).toHaveBeenCalledWith({ user: 'user123' });
+  
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.render).toHaveBeenCalledWith('course', {
+        lessons: [
+          { title: 'Lesson 1', isAccessible: true },
+          { title: 'Lesson 2', isAccessible: true },
+        ],
+      });
     });
 
     it('повинен обробляти помилки сервера', async () => {
@@ -142,26 +171,37 @@ describe('Lesson Controller', () => {
         render: jest.fn(),
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
-        send: jest.fn(),
       };
-      
-      // Мокаємо дані, які повинні бути повернуті з LessonModel
-      LessonModel.find.mockResolvedValue([
-        { numberLesson: 1, isAccessible: true },
-        { numberLesson: 2, isAccessible: false },
-      ]);
   
-  
-      // Створюємо мок об'єкта req з userId
       const req = { cookies: { userId: 'user123' } };
   
-      // Викликаємо функцію контролера
+      // Мокаємо `LessonModel.find`
+      LessonModel.find.mockReturnValue({
+        sort: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockResolvedValue([
+          { numberLesson: 1, title: 'Lesson 1' },
+          { numberLesson: 2, title: 'Lesson 2' },
+        ]),
+      });
+  
+      // Мокаємо `TestResultModel.find`
+      TestResultModel.find.mockResolvedValue([
+        { topic: 'Тема 1', score: 60 }, // Тема 1 пройдена
+      ]);
+  
       await renderLessons(req, res);
   
-      // Перевіряємо, що res.render був викликаний з правильними аргументами
-      //expect(res.render).toHaveBeenCalled();
-
-
+      // Перевіряємо, що `LessonModel.find` був викликаний
+      expect(LessonModel.find).toHaveBeenCalled();
+      expect(TestResultModel.find).toHaveBeenCalledWith({ user: 'user123' });
+  
+      // Перевіряємо, що `res.render` був викликаний з правильними даними
+      expect(res.render).toHaveBeenCalledWith('lessons', {
+        lessons: [
+          { numberLesson: 1, title: 'Lesson 1', isAccessible: true },
+          { numberLesson: 2, title: 'Lesson 2', isAccessible: true },
+        ],
+      });
     });
   
     it('повинен повернути помилку при відсутності токена', async () => {
@@ -185,15 +225,21 @@ describe('Lesson Controller', () => {
   describe('getExam', () => {
     it('повинен повернути питання для іспиту', async () => {
       LessonModel.findOne.mockResolvedValue({
-        test: { questions: [{ question: 'What is 2+2?' }] },
+        test: {
+          questions: [
+            { question: 'What is 2+2?', difficulty: 2 },
+          ],
+        },
       });
       req.params = { numberLesson: 1 };
-
+    
       await getExam(req, res);
-
+    
       expect(LessonModel.findOne).toHaveBeenCalledWith({ numberLesson: 1 });
-      //expect(res.json).toHaveBeenCalledWith([{ question: 'What is 2+2?' }]);
+      //expect(res.json).toHaveBeenCalledWith([{ question: 'What is 2+2?' }]); 
+      // залишив 1 помилку, щоб перевіряти деплой у випадку непроходження тесту
     });
+    
 
     it('повинен обробляти помилки сервера', async () => {
       LessonModel.findOne.mockRejectedValue(new Error('DB error'));
